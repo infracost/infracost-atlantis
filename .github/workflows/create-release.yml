@@ -1,0 +1,21 @@
+name: Create release assets
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Create release assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPOSITORY }}
+          tags: latest
