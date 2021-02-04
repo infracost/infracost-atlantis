@@ -18,7 +18,7 @@ resource "aws_instance" "web_app" {
     device_name = "my_data"
     volume_type = "io1"                     # <<<<< Try changing this to gp2 to compare costs
     volume_size = 1000
-    iops        = 800
+    iops        = 900
   }
 }
 
@@ -29,3 +29,4 @@ resource "aws_lambda_function" "hello_world" {
   runtime       = "nodejs12.x"
   memory_size   = 1024                      # <<<<< Try changing this to 512 to compare costs
 }
+
