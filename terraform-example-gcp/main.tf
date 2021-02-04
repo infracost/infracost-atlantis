@@ -20,7 +20,7 @@ resource "google_compute_instance" "instance1" {
 
   guest_accelerator {
     type = "nvidia-tesla-t4" # <<<<< Try changing this to nvidia-tesla-p4 to compare the costs
-    count = 4
+    count = 3
   }
 
   network_interface {
@@ -38,3 +38,4 @@ resource "google_dns_record_set" "frontend" {
   rrdatas = ["123.123.123.123]"]
   managed_zone = "zone"
 }
+
