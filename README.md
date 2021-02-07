@@ -23,7 +23,7 @@ The following steps describe how you can use this method:
 
 1. [This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI and the [`infracost_atlantis_diff.sh`](https://github.com/infracost/infracost/blob/master/scripts/ci/atlantis_diff.sh) script. If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
 
-2. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY` and `tfflags`. The available environment variables are describe in the next section. The following example shows how this can be done, a similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. 
+2. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY` and `terraform_plan_flags`. The available environment variables are describe in the next section. The following example shows how this can be done, a similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. 
 
     ```
     docker run infracost/infracost-atlantis:latest server \
@@ -53,7 +53,7 @@ The following steps describe how you can use this method:
                   },
                   {
                     "env": {
-                      "name": "tfflags",
+                      "name": "terraform_plan_flags",
                       "value": "-var-file=myvars.tfvars -var-file=othervars.tfvars"
                     }
                   },
@@ -80,11 +80,11 @@ Terragrunt users should also read [this section](https://www.infracost.io/docs/t
 
 **Required** To get an API key [download Infracost](https://www.infracost.io/docs/#installation) and run `infracost register`.
 
-#### `TERRAFORM_BINARY`
+#### `INFRACOST_TERRAFORM_BINARY`
 
 **Optional** Used to change the path to the terraform binary or version, should be set to the path of the Terraform or Terragrunt binary being used in Atlantis.
 
-#### `tfflags`
+#### `terraform_plan_flags`
 
 **Optional** Flags to pass to the 'terraform plan' command run by Infracost, e.g. `"-var-file=myvars.tfvars -var-file=othervars.tfvars"`.
 
@@ -98,7 +98,7 @@ Terragrunt users should also read [this section](https://www.infracost.io/docs/t
 
 #### `pricing_api_endpoint`
 
-**Optional** Specify an alternate price list API URL (default is https://pricing.api.infracost.io).
+**Optional** Specify an alternate Cloud Pricing API URL (default is https://pricing.api.infracost.io).
 
 #### `atlantis_debug`
 
@@ -108,7 +108,7 @@ Terragrunt users should also read [this section](https://www.infracost.io/docs/t
 
 Currently this method uses the [Infracost API](https://www.infracost.io/docs/infracost_api) and shows the full Infracost table output instead of a diff; once [this issue](https://github.com/infracost/infracost/issues/394) is released, we'll update this method to return a diff.
 
-1. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost as shown in the following example. A similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. Optionally add a step to remove secrets from the plan JSON file before sending it to the API.
+1. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost as shown in the following example. You should only need to update `MY_API_KEY` to your Infracost API key. A similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. Optionally add a step to remove secrets from the plan JSON file before sending it to the API.
 
   ```
   docker run infracost/infracost-atlantis:latest server \
@@ -137,7 +137,7 @@ Currently this method uses the [Infracost API](https://www.infracost.io/docs/inf
                   "run": "echo \"#####\" && echo && echo Infracost output:"
                 },
                 {
-                  "run": "curl -s -X POST -H \"x-api-key: MY_API_KEY\" -F \"tfjson=@$PLANFILE.json\" -F \"no-color=true\" https://pricing.api.infracost.io/tfjson"
+                  "run": "curl -s -X POST -H \"x-api-key: MY_API_KEY\" -F \"ci-platform=atlantis\" -F \"terraform-json-file=@$PLANFILE.json\" -F \"no-color=true\" https://pricing.api.infracost.io/terraform-json-file"
                 },
                 {
                   "run": "rm -rf $PLANFILE.json"
