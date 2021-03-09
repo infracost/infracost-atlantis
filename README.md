@@ -17,9 +17,7 @@ There are two methods of integrating Infracost with Atlantis:
 
 ## 1. Docker image
 
-This method runs `infracost diff` using the `$PLANFILE` that Atlantis generates.
-
-The following steps describe how you can use this method:
+This method runs `infracost diff` using the `$PLANFILE` that Atlantis generates. The following steps describe how you can use this method:
 
 1. [This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI and the [`infracost_atlantis_diff.sh`](https://github.com/infracost/infracost/blob/master/scripts/ci/atlantis_diff.sh) script. If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
 
