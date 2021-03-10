@@ -1,6 +1,6 @@
 # Infracost Atlantis Integration
 
-This repo shows how [Infracost](https://infracost.io) can be used with Atlantis. It automatically adds a comment to the bottom of Atlantis' output showing the cost estimate difference if a percentage threshold is crossed. See [this pull-request for a demo](https://github.com/infracost/atlantis-demo/pull/2#issuecomment-776196455), expand the Show Output sections and scroll down to see the Infracost output.
+This repo shows how [Infracost](https://infracost.io) can be used with Atlantis. It automatically adds a comment to the bottom of Atlantis' output showing the cost estimate difference if a percentage threshold is crossed. See [this pull-request for a demo](https://github.com/infracost/atlantis-demo/pulls#issuecomment-795889174), expand the Show Output sections and scroll down to see the Infracost output.
 
 This integration uses the latest version of Infracost by default as we regularly add support for more cloud resources. If you run into any issues, please join our [community Slack channel](https://www.infracost.io/community-chat); we'd be happy to guide you through it.
 
