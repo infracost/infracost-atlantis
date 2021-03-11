@@ -56,7 +56,7 @@ This method runs `infracost diff` using the `$PLANFILE` that Atlantis generates.
                     }
                   },
                   {
-                    "run": "/infracost_atlantis_diff.sh"
+                    "run": "/home/atlantis/infracost_atlantis_diff.sh"
                   }
                 ]
               }
