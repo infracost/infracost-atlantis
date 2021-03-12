@@ -10,4 +10,5 @@ RUN \
   mv /tmp/infracost-linux-amd64 /usr/bin/infracost && \
   # Fetch the atlantis_diff.sh script that runs infracost
   curl -s -L -o /home/atlantis/infracost_atlantis_diff.sh https://raw.githubusercontent.com/infracost/infracost/master/scripts/ci/atlantis_diff.sh && \
-  chmod +x /home/atlantis/infracost_atlantis_diff.sh
+  chmod +x /home/atlantis/infracost_atlantis_diff.sh && \
+  ln -s /home/atlantis/infracost_atlantis_diff.sh /infracost_atlantis_diff.sh
