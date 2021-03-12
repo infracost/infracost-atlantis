@@ -50,7 +50,13 @@ This method runs `infracost diff` using the `$PLANFILE` that Atlantis generates.
                     }
                   },
                   {
-                    "run": "/infracost_atlantis_diff.sh"
+                    "env": {
+                      "name": "INFRACOST_TERRAFORM_BINARY",
+                      "command": "echo \"terraform${ATLANTIS_TERRAFORM_VERSION}\""
+                    }
+                  },
+                  {
+                    "run": "/home/atlantis/infracost_atlantis_diff.sh"
                   }
                 ]
               }
