@@ -9,7 +9,7 @@ RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git
 # Reference: https://nvd.nist.gov/vuln/detail/CVE-2016-4074 (this is present on jq-1.6-rc1 as well)
 RUN \
     # Install jq-1.6 (final release)
-    curl -L -o /tmpjq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && \
+    curl -s -L -o /tmp/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && \
     mv /tmp/jq /usr/local/bin/jq && \
     chmod +x /usr/local/bin/jq
 
