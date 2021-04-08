@@ -1,3 +1,4 @@
+# Using latest release of Atlantis
 FROM runatlantis/atlantis:v0.16.1
 
 # Install required packages
