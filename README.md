@@ -86,7 +86,7 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
 
 **Optional** Path to Infracost [usage file](https://www.infracost.io/docs/usage_based_resources#infracost-usage-file) that specifies values for usage-based resources, see [this example file](https://github.com/infracost/infracost/blob/master/infracost-usage-example.yml) for the available options.
 
-### `config_file`
+#### `config_file`
 
 **Optional** If you need to set the Terraform version on a per-repo basis, you can define that in a [config file](https://www.infracost.io/docs/config_file/) and set this input to its path. In such cases, the `usage_file` input cannot be used and must be defined in the config-file too.
 
