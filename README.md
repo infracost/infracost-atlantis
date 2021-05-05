@@ -80,7 +80,9 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
 
 #### `INFRACOST_TERRAFORM_BINARY`
 
-**Optional** Used to change the path to the `terraform` binary or version, should be set to the path of the Terraform or Terragrunt binary being used in Atlantis. If you're using the `infracost/infracost-atlantis` image (which is based on the [`runatlantis/atlantis`](https://github.com/runatlantis/atlantis/blob/master/Dockerfile) image), you can set this to any of the supported paths, e.g. `/usr/local/bin/terraform0.12.30` or `/usr/local/bin/terraform0.13.6`.
+**Required** Used to change the path to the `terraform` binary with the current version, should be set to the path of the Terraform or Terragrunt binary being used in Atlantis. If you're using the `infracost/infracost-atlantis` image (which is based on the [`runatlantis/atlantis`](https://github.com/runatlantis/atlantis/blob/master/Dockerfile) image), you can set this to any of the supported paths, e.g.
+`/usr/local/bin/terraform0.12.30` or
+`<data-dir>/bin/terraform<version>`. This should be from the path which atlantis keeps the terraform binary in.
 
 #### `usage_file`
 
