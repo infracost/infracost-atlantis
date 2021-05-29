@@ -4,9 +4,17 @@ This repo shows how [Infracost](https://infracost.io) can be used with Atlantis.
 
 This integration uses the latest version of Infracost by default as we regularly add support for more cloud resources. If you run into any issues, please join our [community Slack channel](https://www.infracost.io/community-chat); we'd be happy to guide you through it.
 
-As mentioned in the [FAQ](https://www.infracost.io/docs/faq), **no** cloud credentials, secrets, tags or resource identifiers are sent to the Cloud Pricing API. That API does not become aware of your cloud spend; it simply returns cloud prices to the CLI so calculations can be done on your machine. Infracost does not make any changes to your Terraform state or cloud resources.
+As mentioned in our [FAQ](https://www.infracost.io/docs/faq), no cloud credentials or secrets are sent to the Cloud Pricing API. Infracost does not make any changes to your Terraform state or cloud resources.
 
 <img src="screenshot.png" width=557 alt="Example screenshot" />
+
+## Table of Contents
+
+* [Usage methods](#usage-methods)
+  * [Docker image](#1-docker-image)
+    * [Environment variables](#environment-variables)
+  * [Infracost API](#2-infracost-api)
+* [Contributing](#contributing)
 
 # Usage methods
 
@@ -76,13 +84,13 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
 
 #### `INFRACOST_API_KEY`
 
-**Required** To get an API key [download Infracost](https://www.infracost.io/docs/#installation) and run `infracost register`.
+**Required** To get an API key [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register`.
 
 #### `INFRACOST_TERRAFORM_BINARY`
 
 **Required** Used to change the path to the `terraform` binary with the current version, should be set to the path of the Terraform or Terragrunt binary being used in Atlantis (Infracost works with Terraform v0.12 and above). If you're using the `infracost/infracost-atlantis` image (which is based on the [`runatlantis/atlantis`](https://github.com/runatlantis/atlantis/blob/master/Dockerfile) image), you can set this to:
   - the absolute path of one of the Terraform binaries that the Atlantis image supports, e.g. `/usr/local/bin/terraform0.12.30`. 
-  - a relative path from the directory in which Atlantis keeps the terraform binary in, e.g. `<data-dir>/bin/terraform<version>`.
+  - a relative path from the directory in which Atlantis keeps the Terraform binary in, e.g. `<data-dir>/bin/terraform<version>`.
 
 #### `usage_file`
 
@@ -151,7 +159,7 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
 
 ## Contributing
 
-Merge requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
