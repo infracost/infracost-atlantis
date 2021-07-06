@@ -74,6 +74,13 @@ This method runs `infracost diff` using the `$PLANFILE` that Atlantis generates.
       '
     ```
 
+    Infracost generates the Terraform Plan JSON from the Atlantis `$PLANFILE` (Terraform binary file format). Use the following steps instead of the above steps if you'd rather do that before Infracost runs. The `infracost_atlantis_diff.sh` script checks for a `$PLANFILE.json` file before checking for `$PLANFILE`.
+    ```
+    - run: terraform show -no-color -json $PLANFILE > $PLANFILE.json
+    - run: /home/atlantis/infracost_atlantis_diff.sh
+    - run: rm -rf $PLANFILE.json
+    ```
+
 3. Send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis, expand the Show Output section, at the bottom of which you should see the Infracost output. Set the `atlantis_debug=true` environment variable and see [this page](https://www.infracost.io/docs/integrations/cicd#cicd-troubleshooting) if there are issues.
 
 ### Environment variables
@@ -106,6 +113,14 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
 - `'{"has_diff": true}'`: only post a comment if there is a diff. This is the default behavior.
 - `'{"always": true}'`: always post a comment.
 - `'{"percentage_threshold": 0}'`: absolute percentage threshold that triggers a comment. For example, set to 1 to post a comment if the cost estimate changes by more than plus or minus 1%.
+
+#### `show_skipped`
+
+**Optional** Show unsupported resources, some of which might be free (default is false).
+
+#### `SLACK_WEBHOOK_URL`
+
+**Optional** Set this to also post the pull request comment to a [Slack Webhook](https://slack.com/intl/en-tr/help/articles/115005265063-Incoming-webhooks-for-Slack), which should post it in the corresponding Slack channel.
 
 #### `atlantis_debug`
 
