@@ -1,5 +1,5 @@
 # Using latest release of Atlantis
-FROM runatlantis/atlantis:v0.17.0
+FROM runatlantis/atlantis:v0.17.2
 
 # Install required packages
 RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git
