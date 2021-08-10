@@ -13,7 +13,7 @@ As mentioned in our [FAQ](https://www.infracost.io/docs/faq), no cloud credentia
 * [Usage methods](#usage-methods)
   * [Docker image](#1-docker-image)
     * [Environment variables](#environment-variables)
-  * [Infracost API](#2-infracost-api)
+  * [Plan JSON API](#2-plan-json-api)
 * [Contributing](#contributing)
 
 # Usage methods
@@ -126,7 +126,7 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
 
 **Optional** Enable debug mode in [`infracost_atlantis_diff.sh`](https://github.com/infracost/infracost/blob/master/scripts/ci/atlantis_diff.sh) so it shows the steps being run in the Atlantis pull request comment (default is false).
 
-## 2. Infracost API
+## 2. Plan JSON API
 
 1. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost as shown in the following example. You should only need to update `MY_API_KEY` to your Infracost API key. A similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. Optionally add a step to remove secrets from the plan JSON file before sending it to the API.
 
