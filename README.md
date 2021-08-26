@@ -131,7 +131,7 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
 1. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost as shown in the following example. You should only need to update `MY_API_KEY` to your Infracost API key. A similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. Optionally add a step to remove secrets from the plan JSON file before sending it to the API.
 
   ```
-  docker run infracost/infracost-atlantis:latest server \
+  docker run runatlantis/atlantis:latest server \
     --gh-user=MY_GITHUB_USERNAME \
     --gh-token=MY_GITHUB_TOKEN \
     --gh-webhook-secret=MY_GITHUB_WEBHOOK_SECRET \
