@@ -12,10 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set Atlantis docker tag
+        run: |
+          echo "ATLANTIS_TAG=$(cat Dockerfile | \
+            grep -oE 'FROM.*atlantis.*' | \
+            grep -oE 'v?[0-9]+.[0-9]+.[0-9]+')" >> $GITHUB_ENV
+
       - name: Build and push Docker images
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPOSITORY }}
-          tags: latest
+          tags: "${{ env.ATLANTIS_TAG }},latest"
