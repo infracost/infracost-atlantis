@@ -14,7 +14,7 @@ jobs:
 
       - name: Set Atlantis docker tag
         run: |
-          echo "ATLANTIS_TAG=$(cat Dockerfile | \
+          echo "ATLANTIS_TAG=latest-atlantis$(cat Dockerfile | \
             grep -oE 'FROM.*atlantis.*' | \
             grep -oE 'v?[0-9]+.[0-9]+.[0-9]+')" >> $GITHUB_ENV
 
@@ -24,4 +24,4 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPOSITORY }}
-          tags: "${{ env.ATLANTIS_TAG }},latest"
+          tags: ${{ env.ATLANTIS_TAG }},latest
