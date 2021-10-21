@@ -16,7 +16,7 @@ jobs:
         run: |
           echo "ATLANTIS_TAG=latest-atlantis$(cat Dockerfile | \
             grep -oE 'FROM.*atlantis.*' | \
-            grep -oE 'v?[0-9]+.[0-9]+.[0-9]+')" >> $GITHUB_ENV
+            grep -oE '[0-9]+.[0-9]+.[0-9]+')" >> $GITHUB_ENV
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v1
