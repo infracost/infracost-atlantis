@@ -2,7 +2,7 @@
 FROM runatlantis/atlantis:v0.17.5
 
 # Install required packages
-RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq nodejs nodejs-npm
+RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq nodejs npm
 
 RUN \
   # Install latest infracost version

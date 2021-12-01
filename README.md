@@ -116,7 +116,7 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
 
 #### `show_skipped`
 
-**Optional** Show unsupported resources, some of which might be free (default is false).
+**Optional** Show unsupported resources (default is false).
 
 #### `sync_usage_file` (experimental)
 
