@@ -29,7 +29,7 @@ This method runs `infracost diff` using the `$PLANFILE` that Atlantis generates.
 
 1. [This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI and the [`infracost_atlantis_diff.sh`](https://github.com/infracost/infracost/blob/master/scripts/ci/atlantis_diff.sh) script. If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
 
-2. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY`. The available environment variables are describe in the next section. The following example shows how this can be done, a similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. 
+2. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY`. The available environment variables are describe in the next section. The following example shows how this can be done, a similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files.
 
     ```
     docker run infracost/infracost-atlantis:latest server \
@@ -96,7 +96,7 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
 #### `INFRACOST_TERRAFORM_BINARY`
 
 **Required** Used to change the path to the `terraform` binary with the current version, should be set to the path of the Terraform or Terragrunt binary being used in Atlantis (Infracost works with Terraform v0.12 and above). If you're using the `infracost/infracost-atlantis` image (which is based on the [`runatlantis/atlantis`](https://github.com/runatlantis/atlantis/blob/master/Dockerfile) image), you can set this to:
-  - the absolute path of one of the Terraform binaries that the Atlantis image supports, e.g. `/usr/local/bin/terraform0.12.30`. 
+  - the absolute path of one of the Terraform binaries that the Atlantis image supports, e.g. `/usr/local/bin/terraform0.12.30`.
   - a relative path from the directory in which Atlantis keeps the Terraform binary in, e.g. `<data-dir>/bin/terraform<version>`. Terragrunt users could use `'echo "/atlantis-data/bin/terraform${ATLANTIS_TERRAFORM_VERSION}"'`.
 
 #### `usage_file`
@@ -135,7 +135,7 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
 1. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that send the Terraform plan JSON file to the Infracost [plan JSON API](https://www.infracost.io/docs/integrations/infracost_api) (shown below). You should only need to update `MY_API_KEY` to your Infracost API key. A similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. Optionally add a step to remove secrets from the plan JSON file before sending it to the API.
 
   ```
-  docker run runatlantis/atlantis:latest server \
+  docker run ghcr.io/runatlantis/atlantis:latest server \
     --gh-user=MY_GITHUB_USERNAME \
     --gh-token=MY_GITHUB_TOKEN \
     --gh-webhook-secret=MY_GITHUB_WEBHOOK_SECRET \
@@ -183,4 +183,3 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ## License
 
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
-
