@@ -7,7 +7,7 @@
 #    export INFRACOST_API_KEY=<your-infracost-api-token>
 # 3. Run the `infracost/infracost-atlantis` image, which includes the Infracost and Compost CLIs in addition to Atlantis:
 #    docker run -p 4141:4141 -e GITHUB_TOKEN=$GITHUB_TOKEN -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
-#      --mount type=bind,source=$(pwd)/examples/monorepo_github_comment.yml,target=/home/atlantis/repo.yml \
+#      --mount type=bind,source=$(pwd)/examples/conftest.yml,target=/home/atlantis/repo.yml \
 #      infracost/infracost-atlantis:latest \
 #      --gh-user=<your-github-user> \
 #      --gh-token=$GITHUB_TOKEN \
