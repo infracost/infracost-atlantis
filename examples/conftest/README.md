@@ -92,7 +92,7 @@ This example shows how to use [Atlantis' built in Conftest](https://www.runatlan
      --enable-policy-checks
    ```
 5. Send a pull request in GitHub to change something in Terraform, note the policy checks are performed.
-6. Experiment with different cost policies by editing the policy file generated in the pre_workflow_hook.
+6. Experiment with different cost policies by editing `policy.rego`.
 
 ## Usage
 
