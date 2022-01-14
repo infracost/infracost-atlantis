@@ -1,6 +1,6 @@
 # Conftest Example
 
-This example shows how to use Atlantis' built in [Conftest](https://www.conftest.dev/) support with Infracost to enforce cost policies.
+This example shows how to use [Atlantis' built in Conftest](https://www.runatlantis.io/docs/policy-checking.html) support with Infracost to enforce cost policies.
 
 ## Configuration
 
