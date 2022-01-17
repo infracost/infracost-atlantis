@@ -12,7 +12,7 @@ As mentioned in our [FAQ](https://www.infracost.io/docs/faq), no cloud credentia
 
 * [Usage methods](#usage-methods)
   * [Docker image](#option-1-docker-image)
-  * [Install in DOcker](#option-2-install-in-docker)
+  * [Install in Docker](#option-2-install-in-docker)
   * [Plan JSON API](#option-2-plan-json-api)
 * [Contributing](#contributing)
 
