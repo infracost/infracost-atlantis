@@ -12,27 +12,98 @@ As mentioned in our [FAQ](https://www.infracost.io/docs/faq), no cloud credentia
 
 * [Usage methods](#usage-methods)
   * [Docker image](#option-1-docker-image)
-    * [Environment variables](#environment-variables)
+  * [Install in DOcker](#option-2-install-in-docker)
   * [Plan JSON API](#option-2-plan-json-api)
 * [Contributing](#contributing)
 
 # Usage methods
 
+<<<<<<< HEAD
 There are two methods of integrating Infracost with Atlantis:
 1. Use a custom Docker image that [extends](https://www.runatlantis.io/docs/deployment.html#customization) Atlantis' `latest` image to add Infracost (latest release, v0.9.17). This is the recommended method.
+=======
+There are three methods of integrating Infracost with Atlantis:
+1. Use a custom Docker image that [extends](https://www.runatlantis.io/docs/deployment.html#customization) an Atlantis image to add Infracost (latest release, v0.9.16). This is the recommended method.
+>>>>>>> bf09618... docs: Update options for installing Infracost innto Atlantis
 
-2. Send the `$PLANFILE` from Atlantis to the Infracost [plan JSON API](https://www.infracost.io/docs/integrations/infracost_api) with `curl`. Whilst this API deletes files from the server after they are processed, it is a good security practice to remove secrets from the file before sending it to the API. For example, AWS provides [a grep command](https://gist.github.com/alikhajeh1/f2c3f607c44dabc70c73e04d47bb1307) that can be used to do this.
+2. Use a pre-workflow hook to dynamically install the Infracost CLI on a running Atlantis server. 
+
+3. Send the `$PLANFILE` from Atlantis to the Infracost [plan JSON API](https://www.infracost.io/docs/integrations/infracost_api) with `curl`. Whilst this API deletes files from the server after they are processed, it is a good security practice to remove secrets from the file before sending it to the API. For example, AWS provides [a grep command](https://gist.github.com/alikhajeh1/f2c3f607c44dabc70c73e04d47bb1307) that can be used to do this.
 
 ## Option 1: Docker image
 
-This method runs `infracost diff` using the `$PLANFILE` that Atlantis generates. The following steps describe how you can use this method:
+[This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI.  If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
 
-1. [This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI and the [`infracost_atlantis_diff.sh`](https://github.com/infracost/infracost/blob/master/scripts/ci/atlantis_diff.sh) script. If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
+The `infracost-atlantis` image is maintained with tags for the latest three 0.x versions of Atlantis.  For example, if the latest 0.x versions of Atlantis are v0.18.1, v0.17.6, and v0.16.1, the following images will be published/updated when Infracost v0.9.17 is released:
+ 
+- infracost-atlantis:atlantis0.16-infracost0.9 with Atlantis v0.18.1 and Infracost v0.9.17 
+- infracost-atlantis:atlantis0.17-infracost0.9 with Atlantis v0.17.6 and Infracost v0.9.17
+- infracost-atlantis:atlantis0.18-infracost0.9 with Atlantis v0.16.1 and Infracost v0.9.17
+- infracost-atlantis:latest with Atlantis v0.18.1 and Infracost v0.9.17
 
-2. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY`. The available environment variables are describe in the next section. The following example shows how this can be done, a similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files.
+To generate cost estimates, update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY`.  The following simple example adds the Infracost cost estimate to the Atlantis output.  See [the examples section](examples) for more advanced configurations.
+
+```
+docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
+  infracost/infracost-atlantis:latest server \
+  --gh-user=MY_GITHUB_USERNAME \
+  --gh-token=MY_GITHUB_TOKEN \
+  --gh-webhook-secret=MY_GITHUB_WEBHOOK_SECRET \
+  --repo-allowlist='github.com/myorg/*' \
+  --repo-config-json='
+    {
+      "repos": [
+        {
+          "id": "/.*/",
+          "workflow": "terraform-infracost"
+        }
+      ],
+      "workflows": {
+        "terraform-infracost": {
+          "plan": {
+            "steps": [
+              "init",
+              "plan",
+              {
+                "run": "terraform show -json $PLANFILE > $SHOWFILE"
+              },
+              {
+                "run": "echo \"#####\" && echo && echo Infracost output:"
+              },
+              {
+                "run": "infracost diff --path $SHOWFILE --no-color --log-level=warn"   
+              }
+            ]
+          }
+        }
+      }
+    }
+  '
+```
+
+To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis.  Expand the Show Output section, at the bottom of which you should see the Infracost output.
+
+## Option 2: Install in Docker
+
+Instead of baking Infracost into the Dockerfile, it can be installed dynamically in a pre-workflow hook such as:
+
+```yaml
+repos:
+  - id: /.*/
+    workflow: terraform-infracost
+    pre_workflow_hooks:
+      # Install Infracost
+      - run: |
+          /tmp/infracost --version || curl -L https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz --output infracost.tar.gz && \
+            tar -xvf infracost.tar.gz && \
+            mv infracost-linux-amd64 /tmp/infracost			
+```
+
+For example, to use the Infracost CLI with the latest official Atlantis image, add the pre-workflow hook and set the required environment variables, such as `INFRACOST_API_KEY`.  The following simple example adds the Infracost cost estimate to the Atlantis output.  See [the examples section](examples) for more advanced configurations.
 
     ```
-    docker run infracost/infracost-atlantis:latest server \
+    docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
+      ghcr.io/runatlantis/atlantis:latest server \
       --gh-user=MY_GITHUB_USERNAME \
       --gh-token=MY_GITHUB_TOKEN \
       --gh-webhook-secret=MY_GITHUB_WEBHOOK_SECRET \
@@ -42,7 +113,10 @@ This method runs `infracost diff` using the `$PLANFILE` that Atlantis generates.
           "repos": [
             {
               "id": "/.*/",
-              "workflow": "terraform-infracost"
+              "workflow": "terraform-infracost",
+              "pre_workflow_hooks": [
+                { "run": "/tmp/infracost --version || curl -L https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz --output infracost.tar.gz && tar -xvf infracost.tar.gz && mv infracost-linux-amd64 /tmp/infracost" } 
+              ]
             }
           ],
           "workflows": {
@@ -52,19 +126,13 @@ This method runs `infracost diff` using the `$PLANFILE` that Atlantis generates.
                   "init",
                   "plan",
                   {
-                    "env": {
-                      "name": "INFRACOST_API_KEY",
-                      "value": "MY_API_KEY"
-                    }
+                    "run": "terraform show -json $PLANFILE > $SHOWFILE"
                   },
                   {
-                    "env": {
-                      "name": "INFRACOST_TERRAFORM_BINARY",
-                      "command": "echo \"terraform${ATLANTIS_TERRAFORM_VERSION}\""
-                    }
+                    "run": "echo \"#####\" && echo && echo Infracost output:"
                   },
                   {
-                    "run": "/home/atlantis/infracost_atlantis_diff.sh"
+                    "run": "/tmp/infracost diff --path $SHOWFILE --no-color --log-level=warn"   
                   }
                 ]
               }
@@ -74,65 +142,11 @@ This method runs `infracost diff` using the `$PLANFILE` that Atlantis generates.
       '
     ```
 
-    Infracost generates the Terraform Plan JSON from the Atlantis `$PLANFILE` (Terraform binary file format). Use the following steps instead of the above steps if you'd rather do that before Infracost runs. The `infracost_atlantis_diff.sh` script checks for a `$PLANFILE.json` file before checking for `$PLANFILE`.
-    ```
-    - run: terraform show -no-color -json $PLANFILE > $PLANFILE.json
-    - run: /home/atlantis/infracost_atlantis_diff.sh
-    - run: rm -rf $PLANFILE.json
-    ```
+To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis.  Expand the Show Output section, at the bottom of which you should see the Infracost output.
 
-3. Send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis, expand the Show Output section, at the bottom of which you should see the Infracost output. Set the `atlantis_debug=true` environment variable and see [this page](https://www.infracost.io/docs/integrations/cicd#cicd-troubleshooting) if there are issues.
+## Option 3: Plan JSON API
 
-### Environment variables
-
-This section describes the required environment variables. Other supported environment variables are described in the [this page](https://www.infracost.io/docs/integrations/environment_variables).
-
-Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_tools/terragrunt). Terraform Cloud/Enterprise users should also read [this page](https://www.infracost.io/docs/iac_tools/terraform_cloud_enterprise).
-
-#### `INFRACOST_API_KEY`
-
-**Required** To get an API key [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register`.
-
-#### `INFRACOST_TERRAFORM_BINARY`
-
-**Required** Used to change the path to the `terraform` binary with the current version, should be set to the path of the Terraform or Terragrunt binary being used in Atlantis (Infracost works with Terraform v0.12 and above). If you're using the `infracost/infracost-atlantis` image (which is based on the [`runatlantis/atlantis`](https://github.com/runatlantis/atlantis/blob/master/Dockerfile) image), you can set this to:
-  - the absolute path of one of the Terraform binaries that the Atlantis image supports, e.g. `/usr/local/bin/terraform0.12.30`.
-  - a relative path from the directory in which Atlantis keeps the Terraform binary in, e.g. `<data-dir>/bin/terraform<version>`. Terragrunt users could use `'echo "/atlantis-data/bin/terraform${ATLANTIS_TERRAFORM_VERSION}"'`.
-
-#### `usage_file`
-
-**Optional** Path to Infracost [usage file](https://www.infracost.io/docs/features/usage_based_resources#infracost-usage-file) that specifies values for usage-based resources, see [this example file](https://github.com/infracost/infracost/blob/master/infracost-usage-example.yml) for the available options.
-
-#### `config_file`
-
-**Optional** If you need to set the Terraform version on a per-repo basis, you can define that in a [config file](https://www.infracost.io/docs/config_file/) and set this input to its path. In such cases, the `usage_file` input cannot be used and must be defined in the config-file too.
-
-#### `post_condition`
-
-**Optional** A JSON string describing the condition that triggers pull request comments, can be one of these:
-- `'{"has_diff": true}'`: only post a comment if there is a diff. This is the default behavior.
-- `'{"always": true}'`: always post a comment.
-- `'{"percentage_threshold": 0}'`: absolute percentage threshold that triggers a comment. For example, set to 1 to post a comment if the cost estimate changes by more than plus or minus 1%.
-
-#### `show_skipped`
-
-**Optional** Show unsupported resources (default is false).
-
-#### `sync_usage_file` (experimental)
-
-**Optional**  If set to `true` this will create or update the usage file with missing resources, either using zero values or pulling data from AWS CloudWatch. For more information see the [Infracost docs here](https://www.infracost.io/docs/features/usage_based_resources#1-generate-usage-file). You must also specify the `usage_file` input if this is set to `true`.
-
-#### `SLACK_WEBHOOK_URL`
-
-**Optional** Set this to also post the pull request comment to a [Slack Webhook](https://slack.com/intl/en-tr/help/articles/115005265063-Incoming-webhooks-for-Slack), which should post it in the corresponding Slack channel.
-
-#### `atlantis_debug`
-
-**Optional** Enable debug mode in [`infracost_atlantis_diff.sh`](https://github.com/infracost/infracost/blob/master/scripts/ci/atlantis_diff.sh) so it shows the steps being run in the Atlantis pull request comment (default is false).
-
-## Option 2: Plan JSON API
-
-1. Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that send the Terraform plan JSON file to the Infracost [plan JSON API](https://www.infracost.io/docs/integrations/infracost_api) (shown below). You should only need to update `MY_API_KEY` to your Infracost API key. A similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. Optionally add a step to remove secrets from the plan JSON file before sending it to the API.
+Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that send the Terraform plan JSON file to the Infracost [plan JSON API](https://www.infracost.io/docs/integrations/infracost_api) (shown below). You should only need to update `MY_API_KEY` to your Infracost API key. A similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. Optionally add a step to remove secrets from the plan JSON file before sending it to the API.
 
   ```
   docker run ghcr.io/runatlantis/atlantis:latest server \
@@ -155,16 +169,13 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
                 "init",
                 "plan",
                 {
-                  "run": "terraform show -json $PLANFILE > $PLANFILE.json"
+                  "run": "terraform show -json $PLANFILE > $SHOWFILE"
                 },
                 {
                   "run": "echo \"#####\" && echo && echo Infracost output:"
                 },
                 {
-                  "run": "curl -s -X POST -H \"x-api-key: MY_API_KEY\" -F \"ci-platform=atlantis\" -F \"terraform-json-file=@$PLANFILE.json\" -F \"no-color=true\" https://pricing.api.infracost.io/terraform-json-file"
-                },
-                {
-                  "run": "rm -rf $PLANFILE.json"
+                  "run": "curl -s -X POST -H \"x-api-key: MY_API_KEY\" -F \"ci-platform=atlantis\" -F \"terraform-json-file=@$SHOWFILE\" -F \"no-color=true\" https://pricing.api.infracost.io/terraform-json-file"
                 }
               ]
             }
@@ -174,7 +185,7 @@ Terragrunt users should also read [this page](https://www.infracost.io/docs/iac_
     '
   ```
 
-2. Send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis, expand the Show Output section, at the bottom of which you should see the Infracost output. The output should include errors if there are issues.
+To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis.  Expand the Show Output section, at the bottom of which you should see the Infracost output.
 
 ## Contributing
 
