@@ -89,7 +89,8 @@ repos:
     pre_workflow_hooks:
       # Install Infracost
       - run: |
-          /tmp/infracost --version || curl -L https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz --output infracost.tar.gz && \
+          /tmp/infracost --version && [ $(/tmp/infracost --version 2>&1 | grep -c "A new version of Infracost is available") = 0 ] || \
+            curl -L https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz --output infracost.tar.gz && \
             tar -xvf infracost.tar.gz && \
             mv infracost-linux-amd64 /tmp/infracost			
 ```
@@ -110,7 +111,7 @@ For example, to use the Infracost CLI with the latest official Atlantis image, a
               "id": "/.*/",
               "workflow": "terraform-infracost",
               "pre_workflow_hooks": [
-                { "run": "/tmp/infracost --version || curl -L https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz --output infracost.tar.gz && tar -xvf infracost.tar.gz && mv infracost-linux-amd64 /tmp/infracost" } 
+                { "run": "/tmp/infracost --version && [ $(/tmp/infracost --version 2>&1 | grep -c "A new version of Infracost is available") = 0 ] || curl -L https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz --output infracost.tar.gz && tar -xvf infracost.tar.gz && mv infracost-linux-amd64 /tmp/infracost" } 
               ]
             }
           ],
