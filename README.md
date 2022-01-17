@@ -32,16 +32,16 @@ There are three methods of integrating Infracost with Atlantis:
 
 ## Option 1: Docker image
 
-[This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI.  If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
+[This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI. If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
 
-The `infracost-atlantis` image is maintained with tags for the latest three 0.x versions of Atlantis.  For example, if the latest 0.x versions of Atlantis are v0.18.1, v0.17.6, and v0.16.1, the following images will be published/updated when Infracost v0.9.17 is released:
+The `infracost-atlantis` image is maintained with tags for the latest three 0.x versions of Atlantis. For example, if the latest 0.x versions of Atlantis are v0.18.1, v0.17.6, and v0.16.1, the following images will be published/updated when Infracost v0.9.17 is released:
  
 - infracost-atlantis:atlantis0.16-infracost0.9 with Atlantis v0.18.1 and Infracost v0.9.17 
 - infracost-atlantis:atlantis0.17-infracost0.9 with Atlantis v0.17.6 and Infracost v0.9.17
 - infracost-atlantis:atlantis0.18-infracost0.9 with Atlantis v0.16.1 and Infracost v0.9.17
 - infracost-atlantis:latest with Atlantis v0.18.1 and Infracost v0.9.17
 
-To generate cost estimates, update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY`.  The following simple example adds the Infracost cost estimate to the Atlantis output.  See [the examples section](examples) for more advanced configurations.
+To generate cost estimates, update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY`. The following simple example adds the Infracost cost estimate to the Atlantis output. See [the examples section](examples) for more advanced configurations.
 
 ```
 docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
@@ -81,7 +81,7 @@ docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
   '
 ```
 
-To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis.  Expand the Show Output section, at the bottom of which you should see the Infracost output.
+To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis. Expand the Show Output section, at the bottom of which you should see the Infracost output.
 
 ## Option 2: Install in Docker
 
@@ -99,7 +99,7 @@ repos:
             mv infracost-linux-amd64 /tmp/infracost			
 ```
 
-For example, to use the Infracost CLI with the latest official Atlantis image, add the pre-workflow hook and set the required environment variables, such as `INFRACOST_API_KEY`.  The following simple example adds the Infracost cost estimate to the Atlantis output.  See [the examples section](examples) for more advanced configurations.
+For example, to use the Infracost CLI with the latest official Atlantis image, add the pre-workflow hook and set the required environment variables, such as `INFRACOST_API_KEY`. The following simple example adds the Infracost cost estimate to the Atlantis output. See [the examples section](examples) for more advanced configurations.
 
     ```
     docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
@@ -142,7 +142,7 @@ For example, to use the Infracost CLI with the latest official Atlantis image, a
       '
     ```
 
-To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis.  Expand the Show Output section, at the bottom of which you should see the Infracost output.
+To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis. Expand the Show Output section, at the bottom of which you should see the Infracost output.
 
 ## Option 3: Plan JSON API
 
@@ -185,7 +185,7 @@ Update your Atlantis configuration to add a [custom command](https://www.runatla
     '
   ```
 
-To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis.  Expand the Show Output section, at the bottom of which you should see the Infracost output.
+To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis. Expand the Show Output section, at the bottom of which you should see the Infracost output.
 
 ## Contributing
 
