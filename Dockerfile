@@ -1,5 +1,10 @@
+ARG version
 # Using latest release of Atlantis
+<<<<<<< HEAD
 FROM ghcr.io/runatlantis/atlantis:v0.18.2
+=======
+FROM ghcr.io/runatlantis/atlantis:${version}
+>>>>>>> 0dc1fc9... chore: Update create-release GitHub workflow to use 3 last minor Atlantis releases
 
 # Install required packages
 RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq nodejs npm
