@@ -13,7 +13,6 @@ As mentioned in our [FAQ](https://www.infracost.io/docs/faq), no cloud credentia
 * [Usage methods](#usage-methods)
   * [Docker image](#option-1-docker-image)
   * [Install in Docker](#option-2-install-in-docker)
-  * [Plan JSON API](#option-2-plan-json-api)
 * [Contributing](#contributing)
 
 # Usage methods
@@ -142,49 +141,6 @@ For example, to use the Infracost CLI with the latest official Atlantis image, a
         }
       '
     ```
-
-To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis. Expand the Show Output section, at the bottom of which you should see the Infracost output.
-
-## Option 3: Plan JSON API
-
-Update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that send the Terraform plan JSON file to the Infracost [plan JSON API](https://www.infracost.io/docs/integrations/infracost_api) (shown below). You should only need to update `MY_API_KEY` to your Infracost API key. A similar thing can be done with the Atlantis yaml configs in either the Server Config file or Server Side Repo Config files. Optionally add a step to remove secrets from the plan JSON file before sending it to the API.
-
-  ```
-  docker run ghcr.io/runatlantis/atlantis:latest server \
-    --gh-user=MY_GITHUB_USERNAME \
-    --gh-token=MY_GITHUB_TOKEN \
-    --gh-webhook-secret=MY_GITHUB_WEBHOOK_SECRET \
-    --repo-allowlist='github.com/myorg/*' \
-    --repo-config-json='
-      {
-        "repos": [
-          {
-            "id": "/.*/",
-            "workflow": "terraform-infracost"
-          }
-        ],
-        "workflows": {
-          "terraform-infracost": {
-            "plan": {
-              "steps": [
-                "init",
-                "plan",
-                {
-                  "run": "terraform show -json $PLANFILE > $SHOWFILE"
-                },
-                {
-                  "run": "echo \"#####\" && echo && echo Infracost output:"
-                },
-                {
-                  "run": "curl -s -X POST -H \"x-api-key: MY_API_KEY\" -F \"ci-platform=atlantis\" -F \"terraform-json-file=@$SHOWFILE\" -F \"no-color=true\" https://pricing.api.infracost.io/terraform-json-file"
-                }
-              ]
-            }
-          }
-        }
-      }
-    '
-  ```
 
 To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis. Expand the Show Output section, at the bottom of which you should see the Infracost output.
 
