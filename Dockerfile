@@ -1,5 +1,6 @@
+ARG version
 # Using latest release of Atlantis
-FROM ghcr.io/runatlantis/atlantis:v0.18.1
+FROM ghcr.io/runatlantis/atlantis:${version}
 
 # Install required packages
 RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq nodejs npm
