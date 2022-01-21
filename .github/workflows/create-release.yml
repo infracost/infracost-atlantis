@@ -1,6 +1,9 @@
 name: Create Atlantis release
 
-on: workflow_dispatch
+on:
+  pull_request:
+    branches: [ hail_atlantis ]
+  workflow_dispatch:
 
 jobs:
   generate-release-matrix:
@@ -41,7 +44,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: infracost/infracost-atlantis
+          images: infracost/atlantis-test
           flavor: |
             latest=${{ matrix.latest }}
           tags: |
