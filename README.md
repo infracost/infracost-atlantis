@@ -193,6 +193,26 @@ To help you get up and running with Infracost and Atlantis as quick as possible,
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
+## Running Infracost Atlantis locally
+
+Follow these steps to get `infracost-atlantis` working locally with github.
+
+1. Clone the [infracost](https://github.com/infracost/infracost) repo
+2. Clone this repo and `cd` into it
+3. Make sure the `atlantis.env` file is filled out with the correct values.
+   1. ATLANTIS_GH_TOKEN & GITHUB_TOKEN needs to be set to a personal gh access token with repo access
+   2. ATLANTIS_GH_WEBHOOK_SECRET can be any long string - see setup repo step for more info
+   3. ATLANTIS_REPO_ALLOWLIST needs to be the repo you wish to test PR commenting on
+   4. INFRACOST_API_KEY needs to be a valid infracost api key
+4. Place a `repos.yaml` file in the root of the project that contains the workflows you wish to test
+5. Run `./docker-compose-dev.sh` setting `INFRACOST_REPO` variable to point to the relative path of the `infracost` repo
+6. Create a test github repository, populating it with a single main.tf file with [this contents](https://github.com/infracost/gh-actions-demo/blob/master/terraform/main.tf).
+7. Run `curl $(docker port infracost-atlantis_ngrok_1 4040)/api/tunnels | jq ."tunnels" | jq '.[0]' | jq ."public_url"` to get the public url of the ngrok tunnel to your local atlantis
+8. Navigate to settings > webhook and create a webhook with the url from the previous step + `/events` path
+9. Make a change to the `main.tf` file and open a pr request with it
+10. If everything has run successfully you should see an output on your pr with Infracost results
+
+
 # License
 
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
