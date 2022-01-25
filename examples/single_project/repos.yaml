@@ -6,7 +6,7 @@ repos:
     workflow: terraform-infracost
     pre_workflow_hooks:
       # Clean up any files left over from the last run
-      - run: rm -r /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-*.*
+      - run: rm /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
 workflows:
   terraform-infracost:
     plan:
@@ -16,6 +16,6 @@ workflows:
         # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
         - run: infracost breakdown --path=$PLANFILE --format=json --log-level=info --out-file=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
         # Use Infracost comment to create a comment containing the results for this project.
-        - run: infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME --pull-request $PULL_NUM --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-*-infracost.json --github-token $GITHUB_TOKEN
+        - run: infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME --pull-request $PULL_NUM --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json --github-token $GITHUB_TOKEN
         # Or for other VCS providers:
         # - run: infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME --merge-request $PULL_NUM --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-*-infracost.json --gitlab-token $GITLAB_TOKEN
