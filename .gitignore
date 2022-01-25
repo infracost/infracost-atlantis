@@ -1,3 +1,8 @@
-# IDE
+.atlantis
+atlantis.env
 .idea
 .vscode
+infracost
+infracost_atlantis_diff.sh
+repos.yaml
+.terraform.d/
