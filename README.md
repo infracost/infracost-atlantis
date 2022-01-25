@@ -14,8 +14,6 @@ As mentioned in our [FAQ](https://www.infracost.io/docs/faq), no cloud credentia
   * [Docker image](#option-1-docker-image)
   * [Install in Docker](#option-2-install-in-docker)
 * [Project examples](#project-examples)
-  * [Running an example with GitHub](#running-examples-with-github)
-  * [Running an example with GitLab](#running-examples-with-gitlab)
 * [Contributing](#contributing)
 
 # Usage methods
@@ -145,49 +143,7 @@ To test, send a new pull request to change something in Terraform that costs mon
 
 To help you get up and running with Infracost and Atlantis as quick as possible, we've compiled a list of commonly used scenarios. 
 
-* [Single Project](./examples/single_project/repos.yaml)
-
-## Running an example with GitHub
-
-1. On the Atlantis server, export env vars for:
-   ```sh
-   export GITHUB_TOKEN=<your-github-token>
-   export INFRACOST_API_KEY=<your-infracost-api-token>
-   ```
-2. Add the yaml from the example to your `repos.yaml` or `atlantis.yaml` server side config file.
-3. Run the `infracost/infracost-atlantis` image, which includes the Infracost CLI addition to Atlantis:
-   ```sh
-      docker run -p 4141:4141 -e GITHUB_TOKEN=$GITHUB_TOKEN -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
-        --mount type=bind,source=<path-to-local-yml-file>,target=/home/atlantis/repo.yml \
-        infracost/infracost-atlantis:latest \
-        --gh-user=<your-github-user> \
-        --gh-token=$GITHUB_TOKEN \
-        --gh-webhook-secret=<your-github-webhook-secret> \
-        --repo-allowlist='github.com/your-org/*' \
-        --repo-config=/home/atlantis/repo.yml
-   ```
-4. Send a pull request in GitHub to change something in TF, the Infracost pull request comment should be added.
-
-## Running an example with GitLab
-
-1. On the Atlantis server, export env vars for:
-   ```sh
-   export GITLAB_TOKEN=<your-gitlab-token>
-   export INFRACOST_API_KEY=<your-infracost-api-token>
-   ```
-2. Add the yaml from the example to your `repos.yaml` or `atlantis.yaml` server side config file.
-3. Run the `infracost/infracost-atlantis` image, which includes the Infracost CLI addition to Atlantis:
-   ```sh
-   docker run -p 4141:4141 -e GITLAB_TOKEN=$GITLAB_TOKEN -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
-     --mount type=bind,source=<path-to-local-yml-file>,target=/home/atlantis/repo.yml \
-     infracost/infracost-atlantis:latest \
-     --gitlab-user=<your-gitlab-user> \
-     --gitlab-token=$GITLAB_TOKEN \
-     --gitlab-webhook-secret=<your-gitlab-webhook-secret> \
-     --repo-allowlist='gitlab.com/your-org/*' \
-     --repo-config=/home/atlantis/repo.yml
-   ```
-4. Send a merge request in GitLab to change something in TF, the Infracost merge request comment should be added.
+* [Single Project](./examples/single_project/README.md)
 
 # Contributing
 
