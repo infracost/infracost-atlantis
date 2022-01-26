@@ -2,7 +2,7 @@ This file contains working examples of how you can get Infracost and Terragrunt 
 
 ## Running with GitHub
 
-1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) dockerhub image. You'll need to extend the image to include `terrafgrunt`. This can be done using something like the following:
+1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) dockerhub image. You'll need to extend the image to include `terragrunt`. This can be done using something like the following:
    ```dockerfile
    FROM infracost/infracost-atlantis
    
