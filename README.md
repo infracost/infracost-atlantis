@@ -149,9 +149,9 @@ To help you get up and running with Infracost and Atlantis as quick as possible,
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-## Running Infracost Atlantis locally
+## Running Infracost Atlantis Docker image locally
 
-Follow these steps to get `infracost-atlantis` working locally with github.
+Follow these steps to get the `infracost-atlantis` Docker image working locally with GitHub.
 
 1. Clone the [infracost](https://github.com/infracost/infracost) repo
 2. Clone this repo and `cd` into it
