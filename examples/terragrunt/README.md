@@ -20,9 +20,9 @@ This file contains working examples of how you can get Infracost and Terragrunt 
    repos:
       - id: /.*/
         workflow: terragrunt-infracost
-        pre_workflow_hooks:
-        # Clean up any files left over from the last run
-      - run: rm /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
+        post_workflow_hooks:
+        # Clean up any files left from the run
+          - run: rm /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
    workflows:
       terragrunt-infracost:
          plan:
@@ -60,30 +60,9 @@ This file contains working examples of how you can get Infracost and Terragrunt 
    repos:
       - id: /.*/
         workflow: terragrunt-infracost
-        pre_workflow_hooks:
+        post_workflow_hooks:
         # Clean up any files left over from the last run
-        - run: rm /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
-           workflows:
-           terragrunt-infracost:
-           plan:
-           steps:
-            - env:
-              name: TERRAGRUNT_TFPATH
-              command: 'echo "terraform${ATLANTIS_TERRAFORM_VERSION}"'
-            - run: terragrunt plan -out=$PLANFILE
-            - run: terragrunt show -json $PLANFILE > $SHOWFILE
-            # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
-            - run: infracost breakdown --path=$SHOWFILE --format=json --log-level=info --out-file=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
-            # Use Infracost comment to create a comment containing the results for this project.
-            - run: infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME --merge-request $PULL_NUM --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json --gitlab-token $GITLAB_TOKEN--behavior new
-   ```
-   ```yaml
-   repos:
-      - id: /.*/
-        workflow: terragrunt-infracost
-        pre_workflow_hooks:
-        # Clean up any files left over from the last run
-      - run: rm /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
+         - run: rm /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
    workflows:
       terragrunt-infracost:
          plan:
