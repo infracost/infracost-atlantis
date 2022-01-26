@@ -1,0 +1,11 @@
+# Using latest release of Atlantis
+FROM ghcr.io/runatlantis/atlantis:v0.18.1
+
+# Copy the built local binary of infracost - note this needs to happen before running docker-compose up
+ADD infracost /usr/local/bin/infracost
+
+# Install required packages
+RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq nodejs npm && \
+    npm install -g @infracost/compost
+
+WORKDIR /atlantis/src
