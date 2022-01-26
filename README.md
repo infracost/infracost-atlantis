@@ -21,7 +21,7 @@ As mentioned in our [FAQ](https://www.infracost.io/docs/faq), no cloud credentia
 There are three methods of integrating Infracost with Atlantis:
 1. Use a custom Docker image that [extends](https://www.runatlantis.io/docs/deployment.html#customization) an Atlantis image to add Infracost (latest release, v0.9.16). This is the recommended method.
 
-2. Use a pre-workflow hook to dynamically install the Infracost CLI on a running Atlantis server. 
+2. Use a pre-workflow hook to dynamically install the Infracost CLI on a running Atlantis server.
 
 3. Send the `$PLANFILE` from Atlantis to the Infracost [plan JSON API](https://www.infracost.io/docs/integrations/infracost_api) with `curl`. Whilst this API deletes files from the server after they are processed, it is a good security practice to remove secrets from the file before sending it to the API. For example, AWS provides [a grep command](https://gist.github.com/alikhajeh1/f2c3f607c44dabc70c73e04d47bb1307) that can be used to do this.
 
@@ -30,8 +30,8 @@ There are three methods of integrating Infracost with Atlantis:
 [This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI. If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
 
 The `infracost-atlantis` image is maintained with tags for the latest three 0.x versions of Atlantis. For example, if the latest 0.x versions of Atlantis are v0.18.1 and v0.17.6, the following images will be published/updated when Infracost v0.9.17 is released:
- 
-- infracost-atlantis:atlantis0.18-infracost0.9 with Atlantis v0.18.1 and Infracost v0.9.17 
+
+- infracost-atlantis:atlantis0.18-infracost0.9 with Atlantis v0.18.1 and Infracost v0.9.17
 - infracost-atlantis:atlantis0.17-infracost0.9 with Atlantis v0.17.6 and Infracost v0.9.17
 - infracost-atlantis:latest with Atlantis v0.18.1 and Infracost v0.9.17
 
@@ -65,7 +65,7 @@ docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
                 "run": "echo \"#####\" && echo && echo Infracost output:"
               },
               {
-                "run": "infracost diff --path $SHOWFILE --no-color --log-level=warn"   
+                "run": "infracost diff --path $SHOWFILE --no-color --log-level=warn"
               }
             ]
           }
@@ -91,7 +91,7 @@ repos:
           /tmp/infracost --version && [ $(/tmp/infracost --version 2>&1 | grep -c "A new version of Infracost is available") = 0 ] || \
             curl -L https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz --output infracost.tar.gz && \
             tar -xvf infracost.tar.gz && \
-            mv infracost-linux-amd64 /tmp/infracost			
+            mv infracost-linux-amd64 /tmp/infracost
 ```
 
 For example, to use the Infracost CLI with the latest official Atlantis image, add the pre-workflow hook and set the required environment variables, such as `INFRACOST_API_KEY`. The following simple example adds the Infracost cost estimate to the Atlantis output. See [the examples section](examples) for more advanced configurations.
@@ -110,7 +110,7 @@ For example, to use the Infracost CLI with the latest official Atlantis image, a
               "id": "/.*/",
               "workflow": "terraform-infracost",
               "pre_workflow_hooks": [
-                { "run": "/tmp/infracost --version && [ $(/tmp/infracost --version 2>&1 | grep -c "A new version of Infracost is available") = 0 ] || curl -L https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz --output infracost.tar.gz && tar -xvf infracost.tar.gz && mv infracost-linux-amd64 /tmp/infracost" } 
+                { "run": "/tmp/infracost --version && [ $(/tmp/infracost --version 2>&1 | grep -c "A new version of Infracost is available") = 0 ] || curl -L https://github.com/infracost/infracost/releases/latest/download/infracost-linux-amd64.tar.gz --output infracost.tar.gz && tar -xvf infracost.tar.gz && mv infracost-linux-amd64 /tmp/infracost" }
               ]
             }
           ],
@@ -127,7 +127,7 @@ For example, to use the Infracost CLI with the latest official Atlantis image, a
                     "run": "echo \"#####\" && echo && echo Infracost output:"
                   },
                   {
-                    "run": "/tmp/infracost diff --path $SHOWFILE --no-color --log-level=warn"   
+                    "run": "/tmp/infracost diff --path $SHOWFILE --no-color --log-level=warn"
                   }
                 ]
               }
@@ -141,7 +141,7 @@ To test, send a new pull request to change something in Terraform that costs mon
 
 # Project Examples
 
-To help you get up and running with Infracost and Atlantis as quick as possible, we've compiled a list of commonly used scenarios. 
+To help you get up and running with Infracost and Atlantis as quick as possible, we've compiled a list of commonly used scenarios.
 
 * [Single Project](./examples/single_project/README.md)
 
@@ -164,7 +164,10 @@ Follow these steps to get the `infracost-atlantis` Docker image working locally 
 5. Run `./docker-compose-dev.sh` setting `INFRACOST_REPO` variable to point to the relative path of the `infracost` repo
 6. Create a test GitHub repository, populating it with a single `main.tf` file with [this content](https://github.com/infracost/gh-actions-demo/blob/master/terraform/main.tf).
 7. Run `curl $(docker port infracost-atlantis_ngrok_1 4040)/api/tunnels | jq ."tunnels" | jq '.[0]' | jq ."public_url"` to get the public url of the ngrok tunnel to your local atlantis
-8. Navigate to settings > webhook and create a webhook with the url from the previous step + `/events` path
+8. Navigate to Settings > Webhooks > Add webhook
+   1. Set the 'Payload URL' to the URL from the previous step + `/events` path
+   2. For 'Content type' select 'application/json'
+   3. For 'Which events would you like to trigger this webhook?' select 'Let me select individual events' and tick 'Pull requests' and 'Pushes'.
 9. Make a change to the `main.tf` file and open a PR with it
 10. If everything has run successfully you should see an output on your PR with Infracost results
 
