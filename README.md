@@ -157,7 +157,7 @@ Follow these steps to get `infracost-atlantis` working locally with github.
 2. Clone this repo and `cd` into it
 3. Make sure the `atlantis.env` file is filled out with the correct values.
    1. `ATLANTIS_GH_TOKEN` & `GITHUB_TOKEN` needs to be set to a personal GitHub access token with repo access
-   2. `ATLANTIS_GH_WEBHOOK_SECRET` can be any long string - see setup repo step for more info
+   2. `ATLANTIS_GH_WEBHOOK_SECRET` can be any long string - see step 8 for more into
    3. `ATLANTIS_REPO_ALLOWLIST` needs to be the repo you wish to test PR commenting on
    4. `INFRACOST_API_KEY` needs to be a valid Infracost api key
 4. Place a `repos.yaml` file in the root of the project that contains the workflows you wish to test
