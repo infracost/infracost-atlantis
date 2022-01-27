@@ -144,6 +144,17 @@ To test, send a new pull request to change something in Terraform that costs mon
 To help you get up and running with Infracost and Atlantis as quick as possible, we've compiled a list of commonly used scenarios.
 
 * [Single Project](./examples/single_project/README.md)
+* For private Terraform modules [see below](#private-terraform-modules)
+* For Terraform Cloud/Enterprise [see below](#terraform-cloudenterprise)
+
+## Private Terraform modules
+
+To use with Terraform modules that are hosted in a private git repository you can add the `--write-git-creds` flag to your `atlantis server` command.
+
+## Terraform Cloud/Enterprise
+
+To use with Terraform Cloud/Enterprise you can add the following flags to your `atlantis server` command: `--tfe-hostname='MY_TFE_HOSTNAME' --tfe-token='MY_TFE_TOKEN'`.
+
 
 # Contributing
 
