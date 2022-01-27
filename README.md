@@ -172,7 +172,7 @@ Follow these steps to get the `infracost-atlantis` Docker image working locally 
 8. Navigate to Settings > Webhooks > Add webhook
    1. Set the 'Payload URL' to the URL from the previous step + `/events` path
    2. For 'Content type' select 'application/json'
-   3. For 'Which events would you like to trigger this webhook?' select 'Let me select individual events' and tick 'Pull requests' and 'Pushes'.
+   3. For 'Which events would you like to trigger this webhook?' select 'Let me select individual events' and tick 'Pull requests', 'Issue comments' and 'Pushes'.
 9. Make a change to the `main.tf` file and open a PR with it
 10. If everything has run successfully you should see an output on your PR with Infracost results
 
