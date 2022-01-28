@@ -13,9 +13,6 @@ This repo.yaml file contains a workflow specification to use Infracost with a si
    repos:
      - id: /.*/
        workflow: terraform-infracost
-       post_workflow_hooks:
-         # Clean up any files left over from the run
-         - run: rm /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
    workflows:
      terraform-infracost:
        plan:
@@ -43,9 +40,6 @@ This repo.yaml file contains a workflow specification to use Infracost with a si
    repos:
      - id: /.*/
        workflow: terraform-infracost
-       post_workflow_hooks:
-         # Clean up any files left over from run
-         - run: rm /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
    workflows:
      terraform-infracost:
        plan:
