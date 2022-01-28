@@ -2,7 +2,7 @@ This example shows you how to run Infracost with Atlantis to post a comment on y
 
 ## Running with GitHub
 
-1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) dockerhub image
+1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
 2. You'll need to pass the following custom env vars into the container
    ```sh
    GITHUB_TOKEN=<your-github-token>
@@ -52,12 +52,12 @@ This example shows you how to run Infracost with Atlantis to post a comment on y
    
                infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME --pull-request $PULL_NUM --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json --github-token $GITHUB_TOKEN
    ```
-4. Restart the atlantis application with the new env vars and config
-5. Send a pull request in GitHub to change something in TF, the Infracost pull request comment will be added when you go above your set threshold.
+4. Restart the Atlantis application with the new env vars and config
+5. Send a pull request in GitHub to change something in Terraform code, the Infracost pull request comment will be added when you go above your set threshold.
 
 ## Running with Gitlab
 
-1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) dockerhub image
+1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
 2. You'll need to pass the following custom env vars into the container
    ```sh
    GITLAB_TOKEN=<your-gitlab-token>
@@ -107,5 +107,5 @@ This example shows you how to run Infracost with Atlantis to post a comment on y
    
                infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME --merge-request $PULL_NUM --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json --gitlab-token $GITLAB_TOKEN
    ```
-4. Restart the atlantis application with the new env vars and config
-5. Send a merge request in GitLab to change something in TF, the Infracost merge request comment will be added when you go above your set threshold.
+4. Restart the Atlantis application with the new env vars and config
+5. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment will be added when you go above your set threshold.
