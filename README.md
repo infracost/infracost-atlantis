@@ -151,6 +151,7 @@ To help you get up and running with Infracost and Atlantis as quick as possible,
 * [Single Project](./examples/single_project/README.md)
 * [Cost Thresholds](./examples/thresholds/README.md)
 * [Terragrunt](./examples/terragrunt/README.md)
+* [Append To Atlantis Comment](./examples/append_to_comment/README.md)
 * [Multi Project](./examples/multi_project/README.md)
 
 # Contributing
