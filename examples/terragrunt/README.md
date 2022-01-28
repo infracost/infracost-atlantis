@@ -2,7 +2,7 @@ This file contains working examples of how you can get Infracost and Terragrunt 
 
 ## Running with GitHub
 
-1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) dockerhub image. You'll need to extend the image to include `terragrunt`. This can be done using something like the following:
+1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image. You'll need to extend the image to include `terragrunt`. This can be done using something like the following:
    ```dockerfile
    FROM infracost/infracost-atlantis
    
@@ -37,12 +37,12 @@ This file contains working examples of how you can get Infracost and Terragrunt 
                # Use Infracost comment to create a comment containing the results for this project.
                - run: infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME --pull-request $PULL_NUM --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json --github-token $GITHUB_TOKEN --behavior new
       ```
-4. Restart the atlantis application with the new env vars and config
-5. Send a pull request in GitHub to change something in TF, the Infracost pull request comment should be added.
+4. Restart the Atlantis application with the new env vars and config
+5. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment should be added.
 
 ## Running with Gitlab
 
-1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) dockerhub image. You'll need to extend the image to include `terrafgrunt`. This can be done using something like the following:
+1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image. You'll need to extend the image to include `terragrunt`. This can be done using something like the following:
    ```dockerfile
    FROM infracost/infracost-atlantis
    
@@ -77,5 +77,5 @@ This file contains working examples of how you can get Infracost and Terragrunt 
                # Use Infracost comment to create a comment containing the results for this project.
                - run: infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME --merge-request $PULL_NUM --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json --gitlab-token $GITLAB_TOKEN  --behavior new
    ```  
-4. Restart the atlantis application with the new env vars and config
-5. Send a merge request in GitLab to change something in TF, the Infracost merge request comment should be added.
+4. Restart the Atlantis application with the new env vars and config
+5. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment should be added.
