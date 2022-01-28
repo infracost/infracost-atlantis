@@ -20,9 +20,6 @@ This file contains working examples of how you can get Infracost and Terragrunt 
    repos:
       - id: /.*/
         workflow: terragrunt-infracost
-        post_workflow_hooks:
-        # Clean up any files left from the run
-          - run: rm /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
    workflows:
       terragrunt-infracost:
          plan:
@@ -60,9 +57,6 @@ This file contains working examples of how you can get Infracost and Terragrunt 
    repos:
       - id: /.*/
         workflow: terragrunt-infracost
-        post_workflow_hooks:
-        # Clean up any files left over from the last run
-         - run: rm /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
    workflows:
       terragrunt-infracost:
          plan:
