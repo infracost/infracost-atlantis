@@ -22,8 +22,10 @@ This example shows you how to run Infracost with Atlantis to post a comment on y
            # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
            - run: infracost breakdown --path=$PLANFILE --format=json --log-level=info --out-file=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
            - run: |
-               # Read the breakdown JSON and get costs
-               past=$(cat /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json | jq -r "(.pastTotalMonthlyCost // 0) | tonumber")
+               # Read the breakdown JSON and get costs using jq.
+               # Note jq comes as standard as part of the infracost-atlantis Docker image. If you are using the base atlantis
+               # image you'll need to manually install jq. e.g:
+               # curl https://stedolan.github.io/jq/download/linux64/jq > /usr/local/bin/jq; chmod +x /usr/local/bin/jq               past=$(cat /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json | jq -r "(.pastTotalMonthlyCost // 0) | tonumber")
                current=$(cat /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json | jq -r "(.totalMonthlyCost // 0) | tonumber")
                cost_change=$(cat /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json | jq -r "(.diffTotalMonthlyCost // 0) | tonumber")
 
@@ -42,11 +44,11 @@ This example shows you how to run Infracost with Atlantis to post a comment on y
                echo "percent_change: ${percent_change}"
                echo "absolute_percent_change: ${absolute_percent_change}"
    
-               if [ $(echo "$percent_change < 1" | bc -l) == "1" ]; then           # Only comment if cost changed by more than plus or minus 1%
-               # if [ $(echo "$percent_change < 1" | bc -l) == "1" ]; then         # Only comment if cost increased by more than 1%
+               if [ $(echo "absolute_percent_change < 10" | bc -l) == "1" ]; then           # Only comment if cost changed by more than plus or minus 10%
+               # if [ $(echo "$percent_change < 10" | bc -l) == "1" ]; then         # Only comment if cost increased by more than 10%
                # if [ $(echo "$absolute_cost_change < 100" | bc -l) == "1" ]; then # Only comment if cost changed by more than plus or minus $100
                # if [ $(echo "$cost_change < 100" | bc -l) == "1" ]; then          # Only comment if cost increased by more than $100
-                 echo "Skipping comment, absolute percentage change is less than 1"
+                 echo "Skipping comment, absolute percentage change is less than 10%"
                  exit 0
                fi
    
@@ -77,7 +79,10 @@ This example shows you how to run Infracost with Atlantis to post a comment on y
            # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
            - run: infracost breakdown --path=$PLANFILE --format=json --log-level=info --out-file=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json
            - run: |
-               # Read the breakdown JSON and get costs
+               # Read the breakdown JSON and get costs using jq.
+               # Note jq comes as standard as part of the infracost-atlantis Docker image. If you are using the base atlantis
+               # image you'll need to manually install jq. e.g:
+               # curl https://stedolan.github.io/jq/download/linux64/jq > /usr/local/bin/jq; chmod +x /usr/local/bin/jq
                past=$(cat /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json | jq -r "(.pastTotalMonthlyCost // 0) | tonumber")
                current=$(cat /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json | jq -r "(.totalMonthlyCost // 0) | tonumber")
                cost_change=$(cat /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json | jq -r "(.diffTotalMonthlyCost // 0) | tonumber")
@@ -97,11 +102,11 @@ This example shows you how to run Infracost with Atlantis to post a comment on y
                echo "percent_change: ${percent_change}"
                echo "absolute_percent_change: ${absolute_percent_change}"
    
-               if [ $(echo "$percent_change < 1" | bc -l) == "1" ]; then           # Only comment if cost changed by more than plus or minus 1%
-               # if [ $(echo "$percent_change < 1" | bc -l) == "1" ]; then         # Only comment if cost increased by more than 1%
+               if [ $(echo "absolute_percent_change < 10" | bc -l) == "1" ]; then           # Only comment if cost changed by more than plus or minus 10%
+               # if [ $(echo "$percent_change < 10" | bc -l) == "1" ]; then         # Only comment if cost increased by more than 10%
                # if [ $(echo "$absolute_cost_change < 100" | bc -l) == "1" ]; then # Only comment if cost changed by more than plus or minus $100
                # if [ $(echo "$cost_change < 100" | bc -l) == "1" ]; then          # Only comment if cost increased by more than $100
-                 echo "Skipping comment, absolute percentage change is less than 1"
+                 echo "Skipping comment, absolute percentage change is less than 10%"
                  exit 0
                fi
    
