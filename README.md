@@ -34,11 +34,11 @@ There are three methods of integrating Infracost with Atlantis:
 
 [This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI. If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
 
-The `infracost-atlantis` image is maintained with tags for the latest three 0.x versions of Atlantis. For example, if the latest 0.x versions of Atlantis are v0.18.1 and v0.17.6, the following images will be published/updated when Infracost v0.9.17 is released:
+The `infracost-atlantis` image is maintained with tags for the latest three 0.x versions of Atlantis. For example, if the latest 0.x versions of Atlantis are v0.18.2 and v0.17.6, the following images will be published/updated when Infracost v0.9.17 is released:
 
-- infracost-atlantis:atlantis0.18-infracost0.9 with Atlantis v0.18.1 and Infracost v0.9.17
+- infracost-atlantis:atlantis0.18-infracost0.9 with Atlantis v0.18.2 and Infracost v0.9.17
 - infracost-atlantis:atlantis0.17-infracost0.9 with Atlantis v0.17.6 and Infracost v0.9.17
-- infracost-atlantis:latest with Atlantis v0.18.1 and Infracost v0.9.17
+- infracost-atlantis:latest with Atlantis v0.18.2 and Infracost v0.9.17
 
 To generate cost estimates, update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY`. The following simple example adds the Infracost cost estimate to the Atlantis output. See [the examples section](examples) for more advanced configurations.
 
