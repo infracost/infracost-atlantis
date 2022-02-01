@@ -1,10 +1,18 @@
 # Conftest Example
 
-This example shows how to use [Atlantis' built in Conftest](https://www.runatlantis.io/docs/policy-checking.html) support with Infracost to enforce cost policies.
+This example shows how to use [Atlantis' built-in Conftest](https://www.runatlantis.io/docs/policy-checking.html) support with Infracost to enforce cost policies.
+
+## Table of Contents
+
+* [Configuration](#configuration)
+* [Running with GitHub](#running-with-github)
+* [Running with GitLab](#running-with-gitlab)
+* [Running with Azure Repos](#running-with-azure-repos)
+* [Usage](#usage)
 
 ## Configuration
 
-1. Add the yaml contents of this file to your `repos.yaml` or `atlantis.yaml` server side config file:
+1. Add the YAML contents of this file to your `repos.yaml` or `atlantis.yaml` server side config file:
    ```yaml
    repos:
      - id: /.*/
@@ -14,14 +22,18 @@ This example shows how to use [Atlantis' built in Conftest](https://www.runatlan
        policy_check:
          steps:
            - env:
-               name: INFRACOST_JSON
-               command: 'echo $REPO_REL_DIR-$WORKSPACE-infracost.json'
+               name: INFRACOST_OUTPUT
+               command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json"'
            - show
            - run: echo "Generating Infracost cost estimates for $REPO_REL_DIR/$WORKSPACE..."
-           - run: infracost breakdown --path=$SHOWFILE --format=json --out-file=$INFRACOST_JSON --log-level=warn --no-color
+           - run: |
+               infracost breakdown --path=$SHOWFILE \
+                                   --format=json \
+                                   --out-file=$INFRACOST_OUTPUT \
+                                   --log-level=warn \
+                                   --no-color
            - policy_check:
-               extra_args: [ "-p /home/atlantis/policy", "--namespace", "infracost", "$INFRACOST_JSON" ]
-           - run: rm -rf $INFRACOST_JSON
+               extra_args: [ "-p /home/atlantis/policy", "--namespace", "infracost", "$INFRACOST_OUTPUT" ]
    policies:
      owners:
        users:
@@ -31,7 +43,7 @@ This example shows how to use [Atlantis' built in Conftest](https://www.runatlan
          path: /home/atlantis/policy
          source: local
    ```
-2. Add create a policy file in the [Rego language](https://www.openpolicyagent.org/docs/latest/policy-language/) `policy.rego` and make it available at `/home/atlantis/policy`:
+2. Create a policy file in the [Rego language](https://www.openpolicyagent.org/docs/latest/policy-language/) `policy.rego` and make it available at `/home/atlantis/policy`:
    ```rego
    package infracost
 
@@ -77,8 +89,13 @@ This example shows how to use [Atlantis' built in Conftest](https://www.runatlan
    }
    ```
 3. On the Atlantis server, export env vars for:
+   ```
    export INFRACOST_API_KEY=<your-infracost-api-token>
-4. Run the `infracost/infracost-atlantis` image, which includes the Infracost CLI in addition to Atlantis:
+   ```
+
+## Running with GitHub
+
+1. Run the `infracost/infracost-atlantis` image, which includes the Infracost CLI in addition to Atlantis:
    ```
    docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
      --mount type=bind,source=$(pwd)/examples/conftest/conftest.yml,target=/home/atlantis/repo.yml \
@@ -91,14 +108,51 @@ This example shows how to use [Atlantis' built in Conftest](https://www.runatlan
      --repo-config=/home/atlantis/repo.yml \
      --enable-policy-checks
    ```
-5. Send a pull request in GitHub to change something in Terraform, note the policy checks are performed.
-6. Experiment with different cost policies by editing `policy.rego`.
+2. Send a pull request in GitHub to change something in Terraform, note the policy checks are performed.
+3. Experiment with different cost policies by editing `policy.rego`.
+
+## Running with GitLab
+
+1. Run the `infracost/infracost-atlantis` image, which includes the Infracost CLI in addition to Atlantis:
+   ```
+   docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
+     --mount type=bind,source=$(pwd)/examples/conftest/conftest.yml,target=/home/atlantis/repo.yml \
+     --mount type=bind,source=$(pwd)/examples/conftest/policy,target=/home/atlantis/policy \
+     infracost/infracost-atlantis:latest \
+     --gitlab-user=<your-gitlab-user> \
+     --gitlab-token=$GITLAB_TOKEN \
+     --gitlab-webhook-secret=<your-gitlab-webhook-secret> \
+     --repo-allowlist=<your-gitlab-repo-allowlist> \
+     --repo-config=/home/atlantis/repo.yml \
+     --enable-policy-checks
+   ```
+2. Send a merge request in GitLab to change something in Terraform, note the policy checks are performed.
+3. Experiment with different cost policies by editing `policy.rego`.
+
+## Running with Azure Repos
+
+1. Run the `infracost/infracost-atlantis` image, which includes the Infracost CLI in addition to Atlantis:
+   ```
+   docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
+     --mount type=bind,source=$(pwd)/examples/conftest/conftest.yml,target=/home/atlantis/repo.yml \
+     --mount type=bind,source=$(pwd)/examples/conftest/policy,target=/home/atlantis/policy \
+     infracost/infracost-atlantis:latest \
+     --azuredevops-user=<your-azure-devops-user> \
+     --azuredevops-token=$AZURE_ACCESS_TOKEN \
+     --azuredevops-webhook-user=<your-azure-devops-webhook-user> \
+     --azuredevops-webhook-secret=<your-azure-devops-webhook-secret> \
+     --repo-allowlist=<your-azure-repos-allowlist> \
+     --repo-config=/home/atlantis/repo.yml \
+     --enable-policy-checks
+   ```
+2. Send a merge request in GitLab to change something in Terraform, note the policy checks are performed.
+3. Experiment with different cost policies by editing `policy.rego`.
 
 ## Usage
 
 After a plan is created, Atlantis will run Infracost to generate cost estimates which evaluated againt the policy
-with Conftest.  If the plan does not pass the policy, Atlantis will not allow it to be applied until it fixed to 
-be in compliance, or approved by an authorized user: 
+with Conftest.  If the plan does not pass the policy, Atlantis will not allow it to be applied until it's fixed to
+be in compliance, or approved by an authorized user:
 
 ![PolicyCheckError.png](PolicyCheckError.png)
 

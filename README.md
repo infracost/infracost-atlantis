@@ -29,11 +29,11 @@ There are three methods of integrating Infracost with Atlantis:
 
 [This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI. If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
 
-The `infracost-atlantis` image is maintained with tags for the latest three 0.x versions of Atlantis. For example, if the latest 0.x versions of Atlantis are v0.18.1 and v0.17.6, the following images will be published/updated when Infracost v0.9.17 is released:
+The `infracost-atlantis` image is maintained with tags for the latest three 0.x versions of Atlantis. For example, if the latest 0.x versions of Atlantis are v0.18.2 and v0.17.6, the following images will be published/updated when Infracost v0.9.17 is released:
 
-- infracost-atlantis:atlantis0.18-infracost0.9 with Atlantis v0.18.1 and Infracost v0.9.17
+- infracost-atlantis:atlantis0.18-infracost0.9 with Atlantis v0.18.2 and Infracost v0.9.17
 - infracost-atlantis:atlantis0.17-infracost0.9 with Atlantis v0.17.6 and Infracost v0.9.17
-- infracost-atlantis:latest with Atlantis v0.18.1 and Infracost v0.9.17
+- infracost-atlantis:latest with Atlantis v0.18.2 and Infracost v0.9.17
 
 To generate cost estimates, update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY`. The following simple example adds the Infracost cost estimate to the Atlantis output. See [the examples section](examples) for more advanced configurations.
 
@@ -143,9 +143,15 @@ To test, send a new pull request to change something in Terraform that costs mon
 
 To help you get up and running with Infracost and Atlantis as quick as possible, we've compiled a list of commonly used scenarios.
 
-* [Single Project](./examples/single_project/README.md)
+* [Single project](./examples/single_project/README.md)
+* [Multi-project](./examples/multi_project/README.md)
+* [Terragrunt](./examples/terragrunt/README.md)
 * For private Terraform modules [see below](#private-terraform-modules)
 * For Terraform Cloud/Enterprise [see below](#terraform-cloudenterprise)
+* [Cost thresholds](./examples/thresholds/README.md)
+* [Cost policies with Conftest](./examples/conftest/README.md)
+* [Slack](./examples/slack/README.md)
+* [Append to Atlantis comment](./examples/append_to_comment/README.md)
 
 ## Private Terraform modules
 
@@ -154,7 +160,6 @@ To use with Terraform modules that are hosted in a private git repository you ca
 ## Terraform Cloud/Enterprise
 
 To use with Terraform Cloud/Enterprise you can add the following flags to your `atlantis server` command: `--tfe-hostname='MY_TFE_HOSTNAME' --tfe-token='MY_TFE_TOKEN'`.
-
 
 # Contributing
 
