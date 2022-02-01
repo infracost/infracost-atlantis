@@ -16,7 +16,7 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
    ```yaml
    repos:
      - id: /.*/
-     workflow: terraform-infracost
+       workflow: terraform-infracost
    workflows:
      terraform-infracost:
        policy_check:
