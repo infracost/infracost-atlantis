@@ -25,14 +25,18 @@ workflows:
     policy_check:
       steps:
         - env:
-            name: INFRACOST_JSON
-            command: 'echo $REPO_REL_DIR-$WORKSPACE-infracost.json'
+            name: INFRACOST_OUTPUT
+            command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json"'
         - show
         - run: echo "Generating Infracost cost estimates for $REPO_REL_DIR/$WORKSPACE..."
-        - run: infracost breakdown --path=$SHOWFILE --format=json --out-file=$INFRACOST_JSON --log-level=warn --no-color
+        - run: |
+            infracost breakdown --path=$SHOWFILE \
+                                --format=json \
+                                --out-file=$INFRACOST_OUTPUT \
+                                --log-level=warn \
+                                --no-color
         - policy_check:
-            extra_args: [ "-p /home/atlantis/policy", "--namespace", "infracost", "$INFRACOST_JSON" ]
-        - run: rm -rf $INFRACOST_JSON
+            extra_args: [ "-p /home/atlantis/policy", "--namespace", "infracost", "$INFRACOST_OUTPUT" ]
 policies:
   owners:
     users:
