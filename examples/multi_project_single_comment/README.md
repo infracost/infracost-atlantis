@@ -38,12 +38,13 @@ This repo.yaml file contains a workflow specification to use Infracost with a re
      terraform-infracost:
        plan:
          steps:
+           - env:
+               name: INFRACOST_OUTPUT
+               command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-$REPO_REL_DIR-infracost.json"'
            - init
            - plan
            # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
-           - run: infracost breakdown --path=$PLANFILE --format=json --log-level=info --out-file=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-$REPO_REL_DIR-infracost.json
-
-   
+           - run: infracost breakdown --path=$PLANFILE --format=json --log-level=info --out-file=$INFRACOST_OUTPUT   
    ```
 4. Restart the Atlantis application with the new env vars and config 
 5. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment should be added and show details for every changed project.
@@ -83,10 +84,13 @@ This repo.yaml file contains a workflow specification to use Infracost with a re
      terraform-infracost:
        plan:
          steps:
+           - env:
+               name: INFRACOST_OUTPUT
+               command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-$REPO_REL_DIR-infracost.json"'
            - init
            - plan
            # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
-           - run: infracost breakdown --path=$PLANFILE --format=json --log-level=info --out-file=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-$REPO_REL_DIR-infracost.json
+           - run: infracost breakdown --path=$PLANFILE --format=json --log-level=info --out-file=$INFRACOST_OUTPUT
    ```  
 4. Restart the Atlantis application with the new env vars and config
 5. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment should be added and show details for every changed project.
