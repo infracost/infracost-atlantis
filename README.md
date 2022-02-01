@@ -144,7 +144,8 @@ To test, send a new pull request to change something in Terraform that costs mon
 To help you get up and running with Infracost and Atlantis as quick as possible, we've compiled a list of commonly used scenarios.
 
 * [Single project](./examples/single_project/README.md)
-* [Multi-project](./examples/multi_project/README.md)
+* [Multi-project, multiple PR comments](./examples/multi_project/README.md)
+* [Multi-project, combined PR comment](multi_project_single_comment)
 * [Terragrunt](./examples/terragrunt/README.md)
 * [Cost thresholds](./examples/thresholds/README.md)
 * [Cost policies with Conftest](./examples/conftest/README.md)
