@@ -60,7 +60,7 @@ This option depends on what version of Atlantis you have and how you'd like to h
       <td colspan=2 align=center><a href="examples/multiple-infracost-comments/README.md">Use this option</a></td>
     </tr>
     <tr>
-      <td><b>c)</b> Append cost estimates to the bottom of Atlantis' "Show output" section of the pull request comment. Similar to option a) but the cost estimate is somewhat hidden. This is how our legacy integration worked but most users want separate comments.</td>
+      <td><b>c)</b> Append cost estimates to the bottom of Atlantis' "Show output" section of the pull request comment. Similar to option b) but the cost estimate is somewhat hidden. This is how our legacy integration worked but most users we talked to wanted option a).</td>
       <td colspan=2 align=center><a href="examples/append-to-atlantis-comments/README.md">Use this option</a></td>
     </tr>
   </tbody>

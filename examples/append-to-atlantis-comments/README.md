@@ -32,7 +32,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
                   --out-file=$INFRACOST_OUTPUT
             - run: |
                 # Read the breakdown JSON and get costs using jq.
-                # Note jq comes as standard as part of the infracost-atlantis Docker image. If you are using the base atlantis
+                # Note jq comes as standard as part of infracost-atlantis Docker images. If you are using the base atlantis
                 # image you'll need to manually install jq. e.g:
                 # curl https://stedolan.github.io/jq/download/linux64/jq > /usr/local/bin/jq; chmod +x /usr/local/bin/jq
                 past_total_monthly_cost=$(cat $INFRACOST_OUTPUT | jq -r "(.pastTotalMonthlyCost // 0) | tonumber")
@@ -135,5 +135,5 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
 
                 printf "$msg"
     ```
-4. Restart the Atlantis application with the new env vars and config
+4. Restart the Atlantis application with the new environment vars and config
 5. Send a pull request to change something in the Terraform code, the Infracost output should be added to your Atlantis comment.
