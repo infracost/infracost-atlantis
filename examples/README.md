@@ -1,12 +1,12 @@
 # Examples
 
-* [Single project PR comment](single_project) - This example shows how to use `infracost comment` with Atlantis to post a comment to an open PR with an Infracost result.
-* [Multi-project, multiple PR comments](multi_project) - This example shows how to use `infracost comment` with Atlantis in a multi-project repository. It posts a comment with Infracost results for every project in the repo.
-* [Multi-project, combined PR comment](multi_project_single_comment) - This example shows how to use `infracost comment` with Atlantis in a multi-project repository. It posts a single comment with Infracost results for every project with changes.
-* [Terragrunt project PR comment](terragrunt) - This example shows how to use `infracost comment` with Atlantis and **Terragrunt** to post a comment to a comment to an open PR with a Infracost result.
-* For private Terraform modules [see here](/README.md#private-terraform-modules)
-* For Terraform Cloud/Enterprise [see here](/README.md#terraform-cloudenterprise)
-* [Cost thresholds](thresholds) - This example shows how to use `infracost comment` with Atlantis to post a comment when costs exceed set levels.
-* [Cost policies with Conftest](conftest) - This example shows how to use Atlantis' built-in [Conftest](https://www.conftest.dev/) support with Infracost to enforce cost policies.
-* [Slack](slack) - This example shows how to send cost estimates to Slack.
-* [Append to Atlantis comment](append_to_comment) - This example shows how to use Infracost with Atlantis to append Infracost cost output to an Atlantis comment.
+This directory demonstrates how the integration can be setup using:
+- [Combined Infracost comment](./combined-infracost-comment/README.md): Combine cost estimates from multiple Terraform directories/workspaces into 1 Infracost pull request comment. Only possible with Atlantis 0.18.2 or newer since it uses Atlantis' post_workflow_hooks feature.
+- [Multiple Infracost comments](./multiple-infracost-comments/README.md): Post one Infracost pull request comment per Terraform directory/workspace.
+- [Append to Atlantis comment](./append-to-atlantis-comments/README.md): Append cost estimates to Atlantis pull request comment output
+- [Slack](./slack/README.md): post cost estimates to Slack
+
+### Cost policy examples
+
+- Checkout [this example](./conftest/README.md) to see how Atlantis' native Conftest integration can be used to check Infracost cost estimates against policies.
+- If you do not use Conftest/Open Policy Agent, you can still set [thresholds](./thresholds/README.md) using bash and [jq](https://stedolan.github.io/jq/) so notifications or pull request comments are only sent when cost thresholds are exceeded.

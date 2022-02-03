@@ -1,7 +1,21 @@
-This repo.yaml file contains a workflow specification to use Infracost with a repository that contains multiple terraform projects. It uses `infracost comment` to post a comment to your PR containing a combined Infracost cost estimate for all modified projects.
+# Combined Infracost comment
 
-| Note: This examples requires Atlantis versions >= 18.2 due to the use of post_workflow_hooks |
+TODO: add screenshot
+
+| Note: This examples requires Atlantis versions 0.18.2 or later due to the use of post_workflow_hooks |
 | --- |
+
+This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even when a repository that contains multiple terraform directories or workspaces is used, this example uses `infracost comment` to post a combined cost estimate comment for all modified projects.
+
+<img src="screenshot.png" width=570 alt="Example screenshot" />
+
+## Table of Contents
+
+* [Running with GitHub](#running-with-github)
+* [Running with GitLab](#running-with-gitlab)
+* [Running with Azure Repos](#running-with-azure-repos)
+
+For Bitbucket, please 👍 [this GitHub issue](https://github.com/infracost/infracost/issues/1173) so you get a notification when we support it.
 
 ## Running with GitHub
 
@@ -20,7 +34,7 @@ This repo.yaml file contains a workflow specification to use Infracost with a re
          # Clean up any files left over from previous runs
          - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
          - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
-       post_workflow_hooks:         
+       post_workflow_hooks:
          - run: |
               # Use Infracost comment to create a comment containing the results for this project.
               #
@@ -94,3 +108,7 @@ This repo.yaml file contains a workflow specification to use Infracost with a re
    ```  
 4. Restart the Atlantis application with the new env vars and config
 5. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment should be added and show details for every changed project.
+
+## Running with Azure Repos
+
+TODO: add this

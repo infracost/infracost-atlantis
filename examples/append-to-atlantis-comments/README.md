@@ -1,5 +1,10 @@
-This repo.yaml file contains a workflow specification to use Infracost with Atlantis to append a `breakdown` output to the Atlantis output.
+# Append to Atlantis comment
 
+TODO: change this example to output diff, in the same way the current atlantis diff script does.
+
+This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The Infracost cost estimate is appended to the bottom of the Atlantis output in each Atlantis pull request comment.
+
+<img src="screenshot.png" width=570 alt="Example screenshot" />
 
 1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
 2. You'll need to pass the following custom env var into the container
