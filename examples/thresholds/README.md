@@ -8,6 +8,8 @@ This example shows you how to run Infracost with Atlantis to post a comment on y
 * [Running with GitLab](#running-with-gitlab)
 * [Running with Azure Repos](#running-with-azure-repos)
 
+For Bitbucket, please 👍 [this GitHub issue](https://github.com/infracost/infracost/issues/1173) so you get a notification when we support it.
+
 ## Running with GitHub
 
 1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image.

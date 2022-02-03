@@ -1,199 +1,128 @@
 # Infracost Atlantis Integration
 
-This repo shows how [Infracost](https://infracost.io) can be used with Atlantis. It automatically adds a comment to the bottom of Atlantis' output showing the cost estimate difference. See [this pull-request for a demo](https://github.com/infracost/atlantis-demo/pulls#issuecomment-795889174), expand the Show Output sections and scroll down to see the Infracost output.
+This repo shows how [Infracost](https://infracost.io) can be used with Atlantis, so you can see cloud cost estimates for Terraform in pull requests 💰
 
-This integration uses the latest version of Infracost by default as we regularly add support for more cloud resources. If you run into any issues, please join our [community Slack channel](https://www.infracost.io/community-chat); we'd be happy to guide you through it.
+<img src="examples/combined-infracost-comment/screenshot.png" width=640 alt="Example screenshot" />
 
-As mentioned in our [FAQ](https://www.infracost.io/docs/faq), no cloud credentials or secrets are sent to the Cloud Pricing API. Infracost does not make any changes to your Terraform state or cloud resources.
+## Usage methods
 
-<img src="screenshot.png" width=557 alt="Example screenshot" />
+Since Atlantis does not have a plugins concept, you need to make **two** decisions to integrate it with Infracost:
 
-## Table of Contents
+### 1. Which deployment option do you want to use?
 
-* [Usage methods](#usage-methods)
-  * [Docker image](#option-1-docker-image)
-  * [Install in Docker](#option-2-install-in-docker)
-* [Project examples](#project-examples)
-* [Contributing](#contributing)
+#### a) Use our Docker images (recommended)
+Use our [`infracost-atlantis`](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) Docker images that [extend](https://www.runatlantis.io/docs/deployment.html#customization) the Atlantis image to add Infracost. We maintain tags for the latest two 0.x versions of Atlantis:
+  - `infracost/infracost-atlantis:atlantis0.18-infracost0.9` latest patch version of Atlantis v0.18 and Infracost v0.9
+  - `infracost/infracost-atlantis:atlantis0.17-infracost0.9` latest patch version of Atlantis v0.17 and Infracost v0.9
+  - `infracost/infracost-atlantis:latest` latest versions of Atlantis and Infracost
 
-# Usage methods
+#### b) Build your own Docker image
+If you already use a custom Docker image for Atlantis, copy the top `RUN` command from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
 
-<<<<<<< HEAD
-There are two methods of integrating Infracost with Atlantis:
-1. Use a custom Docker image that [extends](https://www.runatlantis.io/docs/deployment.html#customization) Atlantis' `latest` image to add Infracost (latest release, v0.9.17). This is the recommended method.
-=======
-There are three methods of integrating Infracost with Atlantis:
-1. Use a custom Docker image that [extends](https://www.runatlantis.io/docs/deployment.html#customization) an Atlantis image to add Infracost (latest release, v0.9.16). This is the recommended method.
->>>>>>> bf09618... docs: Update options for installing Infracost innto Atlantis
+#### c) Install in pre-workflow (good for testing)
+Use Atlantis `pre_workflow_hooks` to dynamically install the Infracost CLI on a running Atlantis server (shown in the following repos.yml example). This enables you to test Infracost without changing your Docker image by installing it on each workflow run. Once you're happy with the results, you can use one of the above methods.
 
-2. Use a pre-workflow hook to dynamically install the Infracost CLI on a running Atlantis server.
+To use this method, add the following pre_workflow_hook to your chosen option in the next step. Environment variables such as `INFRACOST_API_KEY` also need to be passed into the Atlantis container.
 
-3. Send the `$PLANFILE` from Atlantis to the Infracost [plan JSON API](https://www.infracost.io/docs/integrations/infracost_api) with `curl`. Whilst this API deletes files from the server after they are processed, it is a good security practice to remove secrets from the file before sending it to the API. For example, AWS provides [a grep command](https://gist.github.com/alikhajeh1/f2c3f607c44dabc70c73e04d47bb1307) that can be used to do this.
+  ```yaml
+  repos:
+    - id: /.*/
+      workflow: terraform-infracost
+      pre_workflow_hooks:
+        # Install Infracost
+        - run: |
+            /tmp/infracost --version && [ $(/tmp/infracost --version 2>&1 | grep -c "A new version of Infracost is available") = 0 ] || \
+              curl -L https://infracost.io/downloads/v0.9/infracost-linux-amd64.tar.gz --output infracost.tar.gz && \
+              tar -xvf infracost.tar.gz && \
+              mv infracost-linux-amd64 /tmp/infracost
+  ```
 
-## Option 1: Docker image
+### 2. How do you want multiple Terraform directories/workspaces to be handled?
 
-[This Docker image](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) extends the Atlantis image by adding the Infracost CLI. If you already use a custom Docker image for Atlantis, copy the `RUN` commands from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
+This option depends on what version of Atlantis you have and how you'd like to handle cost estimates for multiple Terraform directories/workspaces. The following table explains the options and links to instructions as well as screenshots.
 
-The `infracost-atlantis` image is maintained with tags for the latest three 0.x versions of Atlantis. For example, if the latest 0.x versions of Atlantis are v0.18.2 and v0.17.6, the following images will be published/updated when Infracost v0.9.17 is released:
+<table>
+  <thead>
+    <tr>
+        <th></th>
+        <th>If you're using Atlantis 0.18.2 or newer</th>
+        <th>If you're using older than Atlantis 0.18.2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>a) Recommended:</b> combine cost estimates from multiple Terraform directories/workspaces into one Infracost pull request comment. Enables you to see the total cost estimate in one table.</td>
+      <td><a href="examples/combined-infracost-comment/README.md">Use this option</a></td>
+      <td>Not possible since post_workflow_hooks were added in Atlantis 0.18.2</td>
+    </tr>
+    <tr>
+      <td><b>b)</b> Post one Infracost pull request comment per Terraform directory/workspace. This is the best option for users who cannot upgrade Atlantis yet.</td>
+      <td colspan=2 align=center><a href="examples/multiple-infracost-comments/README.md">Use this option</a></td>
+    </tr>
+    <tr>
+      <td><b>c)</b> Append cost estimates to the bottom of Atlantis' "Show output" section of the pull request comment. Similar to option a) but the cost estimate is somewhat hidden. This is how our legacy integration worked but most users want separate comments.</td>
+      <td colspan=2 align=center><a href="examples/append-to-atlantis-comments/README.md">Use this option</a></td>
+    </tr>
+  </tbody>
+</table>
 
-- infracost-atlantis:atlantis0.18-infracost0.9 with Atlantis v0.18.2 and Infracost v0.9.17
-- infracost-atlantis:atlantis0.17-infracost0.9 with Atlantis v0.17.6 and Infracost v0.9.17
-- infracost-atlantis:latest with Atlantis v0.18.2 and Infracost v0.9.17
+## Additional examples
 
-To generate cost estimates, update your Atlantis configuration to add a [custom command](https://www.runatlantis.io/docs/custom-workflows.html#running-custom-commands) that runs Infracost with the required environment variables, such as `INFRACOST_API_KEY`. The following simple example adds the Infracost cost estimate to the Atlantis output. See [the examples section](examples) for more advanced configurations.
+The following examples might be helpful to use alongside the above examples:
+- [Slack](./examples/slack/README.md): post cost estimates to Slack
+- [Conftest](./examples/conftest/README.md): check cost policies using Atlantis' native Conftest integration and Infracost cost estimates.
 
-```
-docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
-  infracost/infracost-atlantis:latest server \
-  --gh-user=MY_GITHUB_USERNAME \
-  --gh-token=MY_GITHUB_TOKEN \
-  --gh-webhook-secret=MY_GITHUB_WEBHOOK_SECRET \
-  --repo-allowlist='github.com/myorg/*' \
-  --repo-config-json='
-    {
-      "repos": [
-        {
-          "id": "/.*/",
-          "workflow": "terraform-infracost"
-        }
-      ],
-      "workflows": {
-        "terraform-infracost": {
-          "plan": {
-            "steps": [
-              "init",
-              "plan",
-              {
-                "run": "terraform show -json $PLANFILE > $SHOWFILE"
-              },
-              {
-                "run": "echo \"#####\" && echo && echo Infracost output:"
-              },
-              {
-                "run": "infracost diff --path $SHOWFILE --no-color --log-level=warn"
-              }
-            ]
-          }
-        }
-      }
-    }
-  '
-```
+If you do not use Conftest/Open Policy Agent, you can still set [thresholds](./examples/thresholds/README.md) using bash and [jq](https://stedolan.github.io/jq/) so notifications or pull request comments are only sent when cost thresholds are exceeded.
 
-To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis. Expand the Show Output section, at the bottom of which you should see the Infracost output.
+## Atlantis usage notes
 
-## Option 2: Install in Docker
-
-Instead of baking Infracost into the Dockerfile, it can be installed dynamically in a pre-workflow hook such as:
-
-```yaml
-repos:
-  - id: /.*/
-    workflow: terraform-infracost
-    pre_workflow_hooks:
-      # Install Infracost
-      - run: |
-          /tmp/infracost --version && [ $(/tmp/infracost --version 2>&1 | grep -c "A new version of Infracost is available") = 0 ] || \
-            curl -L https://infracost.io/downloads/v0.9/infracost-linux-amd64.tar.gz --output infracost.tar.gz && \
-            tar -xvf infracost.tar.gz && \
-            mv infracost-linux-amd64 /tmp/infracost
-```
-
-For example, to use the Infracost CLI with the latest official Atlantis image, add the pre-workflow hook and set the required environment variables, such as `INFRACOST_API_KEY`. The following simple example adds the Infracost cost estimate to the Atlantis output. See [the examples section](examples) for more advanced configurations.
-
-    ```
-    docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
-      ghcr.io/runatlantis/atlantis:latest server \
-      --gh-user=MY_GITHUB_USERNAME \
-      --gh-token=MY_GITHUB_TOKEN \
-      --gh-webhook-secret=MY_GITHUB_WEBHOOK_SECRET \
-      --repo-allowlist='github.com/myorg/*' \
-      --repo-config-json='
-        {
-          "repos": [
-            {
-              "id": "/.*/",
-              "workflow": "terraform-infracost",
-              "pre_workflow_hooks": [
-                { "run": "/tmp/infracost --version && [ $(/tmp/infracost --version 2>&1 | grep -c "A new version of Infracost is available") = 0 ] || curl -L https://infracost.io/downloads/v0.9/infracost-linux-amd64.tar.gz --output infracost.tar.gz && tar -xvf infracost.tar.gz && mv infracost-linux-amd64 /tmp/infracost" }
-              ]
-            }
-          ],
-          "workflows": {
-            "terraform-infracost": {
-              "plan": {
-                "steps": [
-                  "init",
-                  "plan",
-                  {
-                    "run": "terraform show -json $PLANFILE > $SHOWFILE"
-                  },
-                  {
-                    "run": "echo \"#####\" && echo && echo Infracost output:"
-                  },
-                  {
-                    "run": "/tmp/infracost diff --path $SHOWFILE --no-color --log-level=warn"
-                  }
-                ]
-              }
-            }
-          }
-        }
-      '
-    ```
-
-To test, send a new pull request to change something in Terraform that costs money; a comment should be posted on the pull request by Atlantis. Expand the Show Output section, at the bottom of which you should see the Infracost output.
-
-# Project Examples
-
-To help you get up and running with Infracost and Atlantis as quick as possible, we've compiled a list of commonly used scenarios.
-
-* [Single project](./examples/single_project/README.md)
-* [Multi-project, multiple PR comments](./examples/multi_project/README.md)
-* [Multi-project, combined PR comment](multi_project_single_comment)
-* [Terragrunt](./examples/terragrunt/README.md)
-* For private Terraform modules [see below](#private-terraform-modules)
-* For Terraform Cloud/Enterprise [see below](#terraform-cloudenterprise)
-* [Cost thresholds](./examples/thresholds/README.md)
-* [Cost policies with Conftest](./examples/conftest/README.md)
-* [Slack](./examples/slack/README.md)
-* [Append to Atlantis comment](./examples/append_to_comment/README.md)
-
-## Private Terraform modules
+### Private Terraform modules
 
 To use with Terraform modules that are hosted in a private git repository you can add the `--write-git-creds` flag to your `atlantis server` command.
 
-## Terraform Cloud/Enterprise
+### Terraform Cloud/Enterprise
 
 To use with Terraform Cloud/Enterprise you can add the following flags to your `atlantis server` command: `--tfe-hostname='MY_TFE_HOSTNAME' --tfe-token='MY_TFE_TOKEN'`.
 
-# Contributing
+### Terragrunt
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+If you use Atlantis with Terragrunt, you should:
 
-## Running Infracost Atlantis Docker image locally
+1. Update your Docker image to include `terragrunt`, for example:
 
-Follow these steps to get the `infracost-atlantis` Docker image working locally with GitHub.
+   ```dockerfile
+   FROM infracost/infracost-atlantis:latest
 
-1. Clone the [infracost](https://github.com/infracost/infracost) repo
-2. Clone this repo and `cd` into it
-3. Make sure the `atlantis.env` file is filled out with the correct values.
-   1. `ATLANTIS_GH_TOKEN` & `GITHUB_TOKEN` needs to be set to a personal GitHub access token with repo access
-   2. `ATLANTIS_GH_WEBHOOK_SECRET` can be any long string - see step 8 for more into
-   3. `ATLANTIS_REPO_ALLOWLIST` needs to be the repo you wish to test PR commenting on
-   4. `INFRACOST_API_KEY` needs to be a valid Infracost api key
-4. Place a `repos.yaml` file in the root of the project that contains the workflows you wish to test
-5. Run `./docker-compose-dev.sh` setting `INFRACOST_REPO` variable to point to the relative path of the `infracost` repo
-6. Create a test GitHub repository, populating it with a single `main.tf` file with [this content](https://github.com/infracost/gh-actions-demo/blob/master/terraform/main.tf).
-7. Run `curl $(docker port infracost-atlantis_ngrok_1 4040)/api/tunnels | jq ."tunnels" | jq '.[0]' | jq ."public_url"` to get the public url of the ngrok tunnel to your local atlantis
-8. Navigate to Settings > Webhooks > Add webhook
-   1. Set the 'Payload URL' to the URL from the previous step + `/events` path
-   2. For 'Content type' select 'application/json'
-   3. For 'Which events would you like to trigger this webhook?' select 'Let me select individual events' and tick 'Pull requests', 'Issue comments' and 'Pushes'.
-9. Make a change to the `main.tf` file and open a PR with it
-10. If everything has run successfully you should see an output on your PR with Infracost results
+   RUN curl -L https://github.com/gruntwork-io/terragrunt/releases/download/v0.36.0/terragrunt_linux_amd64 --output terragrunt && \
+       chmod +x terragrunt && \
+       mv terragrunt /usr/local/bin
+   ```
 
+2. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files, altering it to fit your terragrunt project:
 
-# License
+    ```yaml
+    repos:
+      - id: /.*/
+        workflow: terragrunt-infracost
+    workflows:
+      terragrunt-infracost:
+        plan:
+          steps:
+            - env:
+                name: INFRACOST_OUTPUT
+                command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json"'
+            - env:
+                name: TERRAGRUNT_TFPATH
+                command: 'echo "terraform${ATLANTIS_TERRAFORM_VERSION}"'
+            - run: terragrunt plan -out=$PLANFILE
+            - run: terragrunt show -json $PLANFILE > $SHOWFILE
+            # Add custom steps here from the examples mentioned elsewhere in this readme
+    ```
+
+## Contributing
+
+Issues and pull requests are welcome! For development details, see the [contributing](https://github.com/infracost/infracost-atlantis/blob/master/CONTRIBUTING.md) guide. For major changes, including interface changes, please open an issue first to discuss what you would like to change. [Join our community Slack channel](https://www.infracost.io/community-chat), we are a friendly bunch and happy to help you get started :)
+
+## License
 
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)

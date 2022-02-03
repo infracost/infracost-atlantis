@@ -10,6 +10,8 @@ Slack message blocks have a 3000 char limit so the Infracost CLI automatically t
 * [Running with GitLab](#running-with-gitlab)
 * [Running with Azure Repos](#running-with-azure-repos)
 
+For Bitbucket, please 👍 [this GitHub issue](https://github.com/infracost/infracost/issues/1173) so you get a notification when we support it.
+
 ## Running with GitHub
 
 1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image.
