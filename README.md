@@ -1,16 +1,15 @@
 # Infracost Atlantis Integration
 
-This repo shows how [Infracost](https://infracost.io) can be used with Atlantis, so you can see cloud cost estimates for Terraform in pull requests 💰 
+This repo shows how [Infracost](https://infracost.io) can be used with Atlantis, so you can see cloud cost estimates for Terraform in pull requests 💰
 
-TODO: Update screenshot to show an Atlantis comment next to an Infracost comment, layered on top of each other, similar to https://github.com/infracost/actions - we could update https://github.com/infracost/atlantis-demo to have a demo PR and take a screenshot from there
-<img src="screenshot.png" width=570 alt="Example screenshot" />
+<img src="examples/combined-infracost-comment/screenshot.png" width=640 alt="Example screenshot" />
 
 ## Usage methods
 
 Since Atlantis does not have a plugins concept, you need to make two decisions to integrate it with Infracost:
 
 1. Which deployment option do you want to use?
-  
+
     a) **Use our Docker images (recommended)**: use our [`infracost-atlantis`](https://hub.docker.com/repository/docker/infracost/infracost-atlantis/) Docker images that [extend](https://www.runatlantis.io/docs/deployment.html#customization) the Atlantis image to add Infracost. We maintain tags for the latest two 0.x versions of Atlantis:
       - `infracost/infracost-atlantis:atlantis0.18-infracost0.9` latest patch version of Atlantis v0.18 and Infracost v0.9
       - `infracost/infracost-atlantis:atlantis0.17-infracost0.9` latest patch version of Atlantis v0.17 and Infracost v0.9
@@ -65,8 +64,6 @@ To use with Terraform modules that are hosted in a private git repository you ca
 To use with Terraform Cloud/Enterprise you can add the following flags to your `atlantis server` command: `--tfe-hostname='MY_TFE_HOSTNAME' --tfe-token='MY_TFE_TOKEN'`.
 
 ### Terragrunt
-
-TODO: does this need more details?
 
 If you use Atlantis with Terragrunt, you should:
 

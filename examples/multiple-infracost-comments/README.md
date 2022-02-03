@@ -1,10 +1,8 @@
-# TODO: Add screenshot
-
 # Multiple Infracost comments
 
 This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. When a repository that contains multiple terraform directories/workspaces is used, this example uses `infracost comment` to post one cost estimate comment per modified projects/workspace.
 
-<img src="screenshot.png" width=570 alt="Example screenshot" />
+<img src="screenshot.png" width=640 alt="Example screenshot" />
 
 ## Table of Contents
 
@@ -62,7 +60,7 @@ For Bitbucket, please 👍 [this GitHub issue](https://github.com/infracost/infr
                                         --github-token $GITHUB_TOKEN \
                                         --tag $INFRACOST_COMMENT_TAG \
                                         --behavior new
- 
+
    ```
 4. Restart the Atlantis application with the new env vars and config.
 5. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment should be added.
