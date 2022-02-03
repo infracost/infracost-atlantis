@@ -24,7 +24,7 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
            - env:
                name: INFRACOST_OUTPUT
                command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json"'
-           - show
+           - show # this writes the plan JSON to $SHOWFILE
            - run: echo "Generating Infracost cost estimates for $REPO_REL_DIR/$WORKSPACE..."
            - run: |
                infracost breakdown --path=$SHOWFILE \
@@ -150,9 +150,7 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
 
 ## Usage
 
-After a plan is created, Atlantis will run Infracost to generate cost estimates which evaluated againt the policy
-with Conftest.  If the plan does not pass the policy, Atlantis will not allow it to be applied until it's fixed to
-be in compliance, or approved by an authorized user:
+After a plan is created, Atlantis will run Infracost to generate cost estimates which evaluated against the policy with Conftest. If the plan does not pass the policy, Atlantis will not allow it to be applied until it's fixed to be in compliance, or approved by an authorized user:
 
 ![PolicyCheckError.png](PolicyCheckError.png)
 
@@ -160,5 +158,4 @@ When the policy check passes, the plan can be applied as usual:
 
 ![PolicyCheckPass.png](PolicyCheckPass.png)
 
-See the [Atlantis documentation](https://www.runatlantis.io/docs/policy-checking.html#how-it-works)
-for more information.
+See the [Atlantis documentation](https://www.runatlantis.io/docs/policy-checking.html#how-it-works) for more information.
