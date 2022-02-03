@@ -1,9 +1,9 @@
 # Examples
 
 This directory demonstrates how the integration can be setup using:
-- [Combined Infracost comment](./combined-infracost-comment/README.md): Combine cost estimates from multiple Terraform directories/workspaces into 1 Infracost pull request comment. Only possible with Atlantis 0.18.2 or newer since it uses Atlantis' post_workflow_hooks feature.
-- [Multiple Infracost comments](./multiple-infracost-comments/README.md): Post one Infracost pull request comment per Terraform directory/workspace.
-- [Append to Atlantis comment](./append-to-atlantis-comments/README.md): Append cost estimates to Atlantis pull request comment output
+- [Combined Infracost comment](./combined-infracost-comment/README.md): combine cost estimates from multiple Terraform directories/workspaces into one Infracost pull request comment. Enables you to see the total cost estimate in one table. Only possible with Atlantis 0.18.2 or newer since it uses Atlantis' post_workflow_hooks feature.
+- [Multiple Infracost comments](./multiple-infracost-comments/README.md): Post one Infracost pull request comment per Terraform directory/workspace. This is the best option for users who cannot upgrade Atlantis yet.
+- [Append to Atlantis comment](./append-to-atlantis-comments/README.md): Append cost estimates to the bottom of Atlantis' "Show output" section of the pull request comment. Similar to the "multiple Infracost comments" option but the cost estimate is somewhat hidden. This is how our legacy integration worked but most users we talked to wanted option a combined Infracost comment.
 - [Slack](./slack/README.md): post cost estimates to Slack
 
 ### Cost policy examples
