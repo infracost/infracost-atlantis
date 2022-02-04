@@ -1,10 +1,6 @@
-ARG version
-# Using latest release of Atlantis
-<<<<<<< HEAD
-FROM ghcr.io/runatlantis/atlantis:v0.18.2
-=======
+# Set this to the version of Atlantis you want to use
+ARG version=latest
 FROM ghcr.io/runatlantis/atlantis:${version}
->>>>>>> 0dc1fc9... chore: Update create-release GitHub workflow to use 3 last minor Atlantis releases
 
 # Install required packages and latest 0.9 version of Infracost
 RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq
@@ -22,4 +18,4 @@ RUN \
   chmod +x /home/atlantis/infracost_atlantis_diff.sh && \
   ln -s /home/atlantis/infracost_atlantis_diff.sh /infracost_atlantis_diff.sh && \
   npm install -g @infracost/compost
-#### End of legacy logic
+### End of legacy logic
