@@ -5,7 +5,7 @@
 # 2. On the Atlantis server, export env vars for:
 #    export GITHUB_TOKEN=<your-github-token>
 #    export INFRACOST_API_KEY=<your-infracost-api-token>
-# 3. Run the `infracost/infracost-atlantis` image, which includes the Infracost and Compost CLIs in addition to Atlantis:
+# 3. Run the `infracost/infracost-atlantis` image, which includes Infracost in addition to Atlantis. Make sure you are using the `--enable-policy-checks` flag:
 #    docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
 #      --mount type=bind,source=$(pwd)/examples/conftest.yml,target=/home/atlantis/repo.yml \
 #      infracost/infracost-atlantis:latest \
@@ -13,7 +13,8 @@
 #      --gh-token=$GITHUB_TOKEN \
 #      --gh-webhook-secret=<your-github-webhook-secret> \
 #      --repo-allowlist='github.com/your-org/*' \
-#      --repo-config=/home/atlantis/repo.yml
+#      --repo-config=/home/atlantis/repo.yml \
+#      --enable-policy-checks
 # 4. Send a pull request in GitHub to change something in TF, the Infracost pull request comment should be added.
 # 5. Experiment with different cost policies by editing the policy file generated in the pre_workflow_hook.
 
