@@ -5,7 +5,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
 <img src="screenshot.png" width=570 alt="Example screenshot" />
 
 1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
-2. You'll need to pass the following custom env var into the container
+2. You'll need to pass the following custom env var into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
    ```sh
    INFRACOST_API_KEY=<your-infracost-api-token>
    ```
