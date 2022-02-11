@@ -8,7 +8,7 @@ This example shows you how to run Infracost with Atlantis to post a comment on y
 * [Running with GitLab](#running-with-gitlab)
 * [Running with Azure Repos](#running-with-azure-repos)
 
-For Bitbucket, please 👍 [this GitHub issue](https://github.com/infracost/infracost/issues/1173) so you get a notification when we support it.
+For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_commands/#bitbucket) for how to post comments using `infracost comment bitbucket`.
 
 ## Running with GitHub
 
