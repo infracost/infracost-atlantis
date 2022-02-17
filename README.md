@@ -4,6 +4,8 @@ This repo shows how [Infracost](https://infracost.io) can be used with Atlantis,
 
 <img src="examples/combined-infracost-comment/screenshot.png" width=640 alt="Example screenshot" />
 
+Follow our [migration guide](https://www.infracost.io/docs/guides/atlantis_migration/) if you used our old version of this repo.
+
 ## Usage methods
 
 Since Atlantis does not have a plugins concept, you need to make **two** decisions to integrate it with Infracost:
