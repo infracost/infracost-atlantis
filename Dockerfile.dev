@@ -1,5 +1,5 @@
 # Using latest release of Atlantis
-FROM ghcr.io/runatlantis/atlantis:v0.18.4
+FROM ghcr.io/runatlantis/atlantis:v0.18.5
 
 # Copy the built local binary of infracost - note this needs to happen before running docker-compose up
 ADD infracost /usr/local/bin/infracost
