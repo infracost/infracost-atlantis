@@ -51,7 +51,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
         steps:
           - env:
               name: INFRACOST_OUTPUT
-              command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-$REPO_REL_DIR-infracost.json"'
+              command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
           - init
           - plan
           - show # this writes the plan JSON to $SHOWFILE
@@ -96,7 +96,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
         steps:
           - env:
               name: INFRACOST_OUTPUT
-              command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-$REPO_REL_DIR-infracost.json"'
+              command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
           - init
           - plan
           - show # this writes the plan JSON to $SHOWFILE
@@ -143,7 +143,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
         steps:
           - env:
               name: INFRACOST_OUTPUT
-              command: 'echo "/tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json"'
+              command: 'echo "/tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
           - init
           - plan
           - show # this writes the plan JSON to $SHOWFILE
