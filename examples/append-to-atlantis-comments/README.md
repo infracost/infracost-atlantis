@@ -23,7 +23,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
             - show # this writes the plan JSON to $SHOWFILE
             - env:
                 name: INFRACOST_OUTPUT
-                command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json"'
+                command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
             # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
             - run: |
                 infracost breakdown --path=$SHOWFILE \

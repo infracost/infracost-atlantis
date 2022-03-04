@@ -23,9 +23,9 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
         steps:
           - env:
               name: INFRACOST_OUTPUT
-              command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json"'
+              command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
           - show # this writes the plan JSON to $SHOWFILE
-          - run: echo "Generating Infracost cost estimates for $REPO_REL_DIR/$WORKSPACE..."
+          - run: echo "Generating Infracost cost estimates for ${REPO_REL_DIR//\//-}/$WORKSPACE..."
           - run: |
               infracost breakdown --path=$SHOWFILE \
                                   --format=json \

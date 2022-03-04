@@ -112,7 +112,7 @@ If you use Atlantis with Terragrunt, you should:
           steps:
             - env:
                 name: INFRACOST_OUTPUT
-                command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-$REPO_REL_DIR-infracost.json"'
+                command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
             - env:
                 name: TERRAGRUNT_TFPATH
                 command: 'echo "terraform${ATLANTIS_TERRAFORM_VERSION}"'
