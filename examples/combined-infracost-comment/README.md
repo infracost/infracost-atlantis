@@ -28,12 +28,17 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
   repos:
     - id: /.*/
       workflow: terraform-infracost
-      pre_workflow_hooks:
-        # Clean up any files left over from previous runs
-        - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
-        - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
       post_workflow_hooks:
         - run: |
+            # post_workflow_hooks are executed after the repo workflow has run.
+            # This enables you to post an Infracost comment with the combined cost output
+            # from all your projects. However, post_workflow_hooks are also triggered when
+            # an apply occurs. In order to stop commenting on PRs twice we need to check
+            # if the Infracost output directory created in our 'plan' stage exists before continuing.
+            if [ ! -d "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM" ]; then
+              exit 0
+            fi
+
             # Choose the commenting behavior, 'new' is a good default:
             # new: Create a new cost estimate comment on every run of Atlantis for each project.
             # update: Create a single comment and update it. The "quietest" option.
@@ -44,7 +49,10 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
                                       --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
                                       --github-token $GITHUB_TOKEN \
                                       --behavior new
-        - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+
+            # remove the Infracost output directory so that `infracost comment` is not
+            # triggered on an `atlantis apply`
+            rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
   workflows:
     terraform-infracost:
       plan:
@@ -56,7 +64,15 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
           - plan
           - show # this writes the plan JSON to $SHOWFILE
           # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
-          - run: infracost breakdown --path=$SHOWFILE --format=json --log-level=info --out-file=$INFRACOST_OUTPUT
+          - run: |
+              if [ ! -d "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM" ]; then
+                mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+              fi
+
+              infracost breakdown --path=$SHOWFILE \
+                                  --format=json \
+                                  --log-level=info \
+                                  --out-file=$INFRACOST_OUTPUT
   ```
 4. Restart the Atlantis application with the new environment vars and config.
 5. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment should be added and show details for every changed project.
