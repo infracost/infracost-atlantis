@@ -1,6 +1,9 @@
 name: Create Atlantis release
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [infracost_atlantis]
 
 jobs:
   generate-release-matrix:
