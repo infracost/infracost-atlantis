@@ -24,7 +24,7 @@ If you already use a custom Docker image for Atlantis, copy the top `RUN` comman
 #### c) Install in pre-workflow (good for testing)
 Use Atlantis `pre_workflow_hooks` to dynamically install the Infracost CLI on a running Atlantis server (shown in the following repos.yml example). This enables you to test Infracost without changing your Docker image by installing it on each workflow run. Once you're happy with the results, you can use one of the above methods.
 
-To use this method, add the following `pre_workflow_hook` to your chosen option in the next step. Also change references to the Infracost CLI invocation to `/tmp/infracost` in the the next step. Environment variables such as `INFRACOST_API_KEY` also need to be passed into the Atlantis container.
+To use this method, add the following `pre_workflow_hook` to your chosen option in the next step. Also change references to the Infracost CLI invocation to `/tmp/infracost` in the the next step. [Environment variables](https://www.infracost.io/docs/integrations/environment_variables/) such as `INFRACOST_API_KEY` also need to be passed into the Atlantis container.
 
   ```yaml
   repos:
