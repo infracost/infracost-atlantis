@@ -78,6 +78,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
   ```
 4. Restart the Atlantis application with the new env vars and config.
 5. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment will be added and a Slack message will be posted if there is cost change.
+6. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
 
 ## Running with GitLab
 
@@ -145,6 +146,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
   ```
 4. Restart the Atlantis application with the new env vars and config.
 5. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment will be added and a Slack message will be posted if there is cost change.
+6. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
 
 ## Running with Azure Repos
 
@@ -213,3 +215,4 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
   ```
 4. Restart the Atlantis application with the new env vars and config.
 5. Send a pull request in Azure Repos to change something in the Terraform code, the Infracost pull request comment will be added and a Slack message will be posted if there is cost change.
+6. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
