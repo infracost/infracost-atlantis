@@ -14,8 +14,8 @@ Since Atlantis does not have a plugins concept, you need to make **two** decisio
 
 #### a) Use our Docker images (recommended)
 Use our [`infracost-atlantis`](https://hub.docker.com/r/infracost/infracost-atlantis) Docker images that [extend](https://www.runatlantis.io/docs/deployment.html#customization) the Atlantis image to add Infracost. We maintain tags for the latest two 0.x versions of Atlantis:
-  - `infracost/infracost-atlantis:atlantis0.18-infracost0.9` latest patch version of Atlantis v0.18 and Infracost v0.9
-  - `infracost/infracost-atlantis:atlantis0.17-infracost0.9` latest patch version of Atlantis v0.17 and Infracost v0.9
+  - `infracost/infracost-atlantis:atlantis0.18-infracost0.10` latest patch version of Atlantis v0.18 and Infracost v0.10
+  - `infracost/infracost-atlantis:atlantis0.17-infracost0.10` latest patch version of Atlantis v0.17 and Infracost v0.10
   - `infracost/infracost-atlantis:latest` latest versions of Atlantis and Infracost
 
 #### b) Build your own Docker image
@@ -34,7 +34,7 @@ To use this method, add the following `pre_workflow_hook` to your chosen option 
         # Install Infracost, use `/tmp/infracost` to run the CLI in step 2
         - run: |
             /tmp/infracost --version && [ $(/tmp/infracost --version 2>&1 | grep -c "A new version of Infracost is available") = 0 ] || \
-              curl -L https://infracost.io/downloads/v0.9/infracost-linux-amd64.tar.gz --output infracost.tar.gz && \
+              curl -L https://infracost.io/downloads/v0.10/infracost-linux-amd64.tar.gz --output infracost.tar.gz && \
               tar -xvf infracost.tar.gz && \
               mv infracost-linux-amd64 /tmp/infracost
   ```
