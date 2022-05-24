@@ -2,10 +2,13 @@
 ARG version=latest
 FROM ghcr.io/runatlantis/atlantis:${version}
 
-# Install required packages and latest 0.10 version of Infracost
+# Set this to the minor version of Infracost CLI you want to use (e.g., v0.9, v0.10)
+ARG cli_version=v0.10
+
+# Install required packages and latest ${cli_version} version of Infracost
 RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq
 RUN \
-  curl -s -L https://infracost.io/downloads/v0.10/infracost-linux-amd64.tar.gz | tar xz -C /tmp && \
+  curl -s -L "https://infracost.io/downloads/$cli_version/infracost-linux-amd64.tar.gz" | tar xz -C /tmp && \
   mv /tmp/infracost-linux-amd64 /usr/bin/infracost
 
 ### Legacy logic - not needed for new users
