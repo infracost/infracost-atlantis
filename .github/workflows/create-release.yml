@@ -61,5 +61,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             version=v${{ matrix.atlantis_version }}
-            cli_version=v${{ matrix.cli_version }}
+            cli_version=v${{ matrix.cli_release }}
           push: true
