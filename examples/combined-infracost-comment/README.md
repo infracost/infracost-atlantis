@@ -12,8 +12,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
 * [Running with GitHub](#running-with-github)
 * [Running with GitLab](#running-with-gitlab)
 * [Running with Azure Repos](#running-with-azure-repos)
-
-For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_commands/#bitbucket) for how to post comments using `infracost comment bitbucket`.
+* [Running with Bitbucket](#running-with-bitbucket)
 
 ## Running with GitHub
 
@@ -170,4 +169,71 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
   ```
 4. Restart the Atlantis application with the new environment vars and config
 5. Send a pull request in Azure Repos to change something in the Terraform code, the Infracost merge request comment should be added and show details for every changed project.
+6. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
+
+## Running with Bitbucket
+
+1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
+2. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
+  ```sh
+  BITBUCKET_TOKEN=<your-bitbucket-token> # for Bitbucket Cloud this should be username:token, where the token can be a user or App password. For Bitbucket Server provide only an HTTP access token.
+  INFRACOST_API_KEY=<your-infracost-api-token>
+  ```
+3. Add the following yaml spec to `repos.yaml` config files:
+  ```yaml
+  repos:
+    - id: /.*/
+      workflow: terraform-infracost
+      pre_workflow_hooks:
+        # Clean up any files left over from previous runs
+        - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+        - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM      
+      post_workflow_hooks:
+        - run: |
+            # post_workflow_hooks are executed after the repo workflow has run.
+            # This enables you to post an Infracost comment with the combined cost output
+            # from all your projects. However, post_workflow_hooks are also triggered when
+            # an apply occurs. In order to stop commenting on PRs twice we need to check
+            # if the Infracost output directory created in our 'plan' stage exists before continuing.
+            if [ ! -d "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM" ]; then
+              exit 0
+            fi
+
+            # Choose the commenting behavior, 'new' is a good default:
+            # new: Create a new cost estimate comment on every run of Atlantis for each project.
+            # update: Create a single comment and update it. The "quietest" option.
+            # hide-and-new: Minimize previous comments and create a new one.
+            # delete-and-new: Delete previous comments and create a new one.
+            infracost comment bitbucket --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+                                      --pull-request $PULL_NUM \
+                                      --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
+                                      --bitbucket-token $BITBUCKET_TOKEN \
+                                      --behavior new
+
+            # remove the Infracost output directory so that `infracost comment` is not
+            # triggered on an `atlantis apply`
+        - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+  workflows:
+    terraform-infracost:
+      plan:
+        steps:
+          - env:
+              name: INFRACOST_OUTPUT
+              command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
+          - init
+          - plan
+          - show # this writes the plan JSON to $SHOWFILE
+          # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
+          - run: |
+              if [ ! -d "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM" ]; then
+                mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+              fi
+
+              infracost breakdown --path=$SHOWFILE \
+                                  --format=json \
+                                  --log-level=info \
+                                  --out-file=$INFRACOST_OUTPUT
+  ```
+4. Restart the Atlantis application with the new environment vars and config.
+5. Send a pull request in Bitbucket to change something in the Terraform code, the Infracost pull request comment should be added and show details for every changed project.
 6. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
