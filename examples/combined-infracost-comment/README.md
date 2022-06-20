@@ -176,7 +176,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
 1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
 2. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
   ```sh
-  BITBUCKET_TOKEN=<your-bitbucket-token> # for bitbucket cloud this should be username:token
+  BITBUCKET_TOKEN=<your-bitbucket-token> # for Bitbucket Cloud this should be username:token, where the token can be a user or App password. For Bitbucket Server provide only an HTTP access token.
   INFRACOST_API_KEY=<your-infracost-api-token>
   ```
 3. Add the following yaml spec to `repos.yaml` config files:
