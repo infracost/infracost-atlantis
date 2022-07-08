@@ -14,14 +14,16 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 
 ## Running with GitHub
 
-1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image.
-2. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
+1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
+2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+3. Retrieve your Infracost API key by running `infracost configure get api_key`.
+4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
   ```sh
   GITHUB_TOKEN=<your-github-token>
   INFRACOST_API_KEY=<your-infracost-api-token>
   SLACK_WEBHOOK_URL: <your-slack-webhook-url>
   ```
-3. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
+5. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
   ```yaml
   repos:
     - id: /.*/
@@ -46,8 +48,11 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
                                   --log-level=info \
                                   --out-file=$INFRACOST_OUTPUT
           # Use Infracost comment to create a comment containing the results for this project
+          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
+          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
+          #   contain any cloud credentials or secrets.
           - run: |
-              infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+              INFRACOST_ENABLE_CLOUD​=true infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
                                       --pull-request $PULL_NUM \
                                       --path $INFRACOST_OUTPUT \
                                       --github-token $GITHUB_TOKEN \
@@ -76,20 +81,25 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 
               curl -X POST -H "Content-type: application/json" -d @$INFRACOST_SLACK_MESSAGE $SLACK_WEBHOOK_URL
   ```
-4. Restart the Atlantis application with the new env vars and config.
-5. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment will be added and a Slack message will be posted if there is cost change.
-6. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
+6. Restart the Atlantis application with the new environment vars and config.
+7. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment will be added and a Slack message will be posted if there is cost change.
+8. To see the test pull request costs in Infracost Cloud, [log in](https://dashboard.infracost.io/) > switch to your organization > Projects. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
+
+    <img src="/.github/assets/infracost-cloud-runs.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners to have visibility across all cost estimates in CI/CD" width="90%" />
+9. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
 
 ## Running with GitLab
 
-1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image.
-2. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
+1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
+2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+3. Retrieve your Infracost API key by running `infracost configure get api_key`.
+4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
   ```sh
   GITLAB_TOKEN=<your-gitlab-token>
   INFRACOST_API_KEY=<your-infracost-api-token>
   SLACK_WEBHOOK_URL: <your-slack-webhook-url>
   ```
-3. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
+5. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
   ```yaml
   repos:
     - id: /.*/
@@ -114,8 +124,11 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
                                   --log-level=info \
                                   --out-file=$INFRACOST_OUTPUT
           # Use Infracost comment to create a comment containing the results for this project
+          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
+          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
+          #   contain any cloud credentials or secrets.
           - run: |
-              infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+              INFRACOST_ENABLE_CLOUD​=true infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
                                       --merge-request $PULL_NUM \
                                       --path $INFRACOST_OUTPUT \
                                       --gitlab-token $GITLAB_TOKEN \
@@ -144,21 +157,26 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 
               curl -X POST -H "Content-type: application/json" -d @$INFRACOST_SLACK_MESSAGE $SLACK_WEBHOOK_URL
   ```
-4. Restart the Atlantis application with the new env vars and config.
-5. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment will be added and a Slack message will be posted if there is cost change.
-6. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
+6. Restart the Atlantis application with the new environment vars and config.
+7. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment will be added and a Slack message will be posted if there is cost change.
+8. To see the test pull request costs in Infracost Cloud, [log in](https://dashboard.infracost.io/) > switch to your organization > Projects. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
+
+    <img src="/.github/assets/infracost-cloud-runs.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners to have visibility across all cost estimates in CI/CD" width="90%" />
+9. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
 
 ## Running with Azure Repos
 
-1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image.
-2. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
+1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
+2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+3. Retrieve your Infracost API key by running `infracost configure get api_key`.
+4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
   ```sh
   AZURE_ACCESS_TOKEN=<your-azure-devops-access-token-or-pat>
   AZURE_REPO_URL=<your-azure-repo-url> # i.e., https://dev.azure.com/your-org/your-project/_git/your-repo
   INFRACOST_API_KEY=<your-infracost-api-token>
   SLACK_WEBHOOK_URL: <your-slack-webhook-url>
   ```
-3. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
+5. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
   ```yaml
   repos:
     - id: /.*/
@@ -183,8 +201,11 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
                                   --log-level=info \
                                   --out-file=$INFRACOST_OUTPUT
           # Use Infracost comment to create a comment containing the results for this project
+          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
+          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
+          #   contain any cloud credentials or secrets.
           - run: |
-              infracost comment azure-repos --repo-url $AZURE_REPO_URL \
+              INFRACOST_ENABLE_CLOUD​=true infracost comment azure-repos --repo-url $AZURE_REPO_URL \
                                             --pull-request $PULL_NUM \
                                             --path $INFRACOST_OUTPUT \
                                             --azure-access-token $AZURE_ACCESS_TOKEN \
@@ -213,6 +234,10 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 
               curl -X POST -H "Content-type: application/json" -d @$INFRACOST_SLACK_MESSAGE $SLACK_WEBHOOK_URL
   ```
-4. Restart the Atlantis application with the new env vars and config.
-5. Send a pull request in Azure Repos to change something in the Terraform code, the Infracost pull request comment will be added and a Slack message will be posted if there is cost change.
-6. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
+
+6. Restart the Atlantis application with the new environment vars and config.
+7. Send a pull request in Azure Repos to change something in the Terraform code, the Infracost pull request comment will be added and a Slack message will be posted if there is cost change.
+8. To see the test pull request costs in Infracost Cloud, [log in](https://dashboard.infracost.io/) > switch to your organization > Projects. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
+
+    <img src="/.github/assets/infracost-cloud-runs.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners to have visibility across all cost estimates in CI/CD" width="90%" />
+9. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
