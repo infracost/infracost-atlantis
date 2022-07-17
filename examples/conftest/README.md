@@ -88,7 +88,7 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
           )
   }
   ```
-3. On the Atlantis server, export env vars for the following. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost register` to get a free API key.
+3. On the Atlantis server, export env vars for the following. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
   ```
   export INFRACOST_API_KEY=<your-infracost-api-token>
   ```
