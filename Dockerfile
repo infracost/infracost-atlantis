@@ -6,7 +6,7 @@ FROM ghcr.io/runatlantis/atlantis:${version}
 ARG cli_version=v0.10
 
 # Install required packages and latest ${cli_version} version of Infracost
-RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq
+RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq aws-cli
 RUN \
   curl -s -L "https://infracost.io/downloads/$cli_version/infracost-linux-amd64.tar.gz" | tar xz -C /tmp && \
   mv /tmp/infracost-linux-amd64 /usr/bin/infracost
