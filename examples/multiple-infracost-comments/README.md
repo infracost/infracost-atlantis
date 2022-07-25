@@ -55,15 +55,12 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               # You can use `tag` to customize the hidden markdown tag used to detect comments posted by Infracost. We pass in the project directory here
               # so that there are no conflicts across projects when posting to the pull request. This is especially important if you
               # use a comment behavior other than "new".
-              # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-              #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-              #   contain any cloud credentials or secrets.
-              INFRACOST_ENABLE_CLOUD​=true infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
-                                                                    --pull-request $PULL_NUM \
-                                                                    --path $INFRACOST_OUTPUT \
-                                                                    --github-token $GITHUB_TOKEN \
-                                                                    --tag $INFRACOST_COMMENT_TAG \
-                                                                    --behavior new
+              infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+                                       --pull-request $PULL_NUM \
+                                       --path $INFRACOST_OUTPUT \
+                                       --github-token $GITHUB_TOKEN \
+                                       --tag $INFRACOST_COMMENT_TAG \
+                                       --behavior new
   ```
 6. Restart the Atlantis application with the new environment vars and config.
 7. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment should be added.
@@ -97,6 +94,13 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
           - env:
               name: INFRACOST_COMMENT_TAG
               command: 'echo "$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}"'
+          # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+          #   complements the open source CLI by giving teams advanced visibility and controls.
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+          - env:
+              name: INFRACOST_ENABLE_CLOUD
+              value: true              
           - init
           - plan
           - show # this writes the plan JSON to $SHOWFILE
@@ -113,16 +117,13 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               #   delete-and-new: Delete previous comments and create a new one.
               # You can use `tag` to customize the hidden markdown tag used to detect comments posted by Infracost. We pass in the project directory here
               # so that there are no conflicts across projects when posting to the pull request. This is especially important if you
-              # use a comment behavior other than "new".
-              # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-              #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-              #   contain any cloud credentials or secrets.
-              INFRACOST_ENABLE_CLOUD​=true infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
-                                                                    --merge-request $PULL_NUM \
-                                                                    --path $INFRACOST_OUTPUT \
-                                                                    --gitlab-token $GITLAB_TOKEN \
-                                                                    --tag $INFRACOST_COMMENT_TAG \
-                                                                    --behavior new
+              # use a comment behavior other than "new".              
+              infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+                                       --merge-request $PULL_NUM \
+                                       --path $INFRACOST_OUTPUT \
+                                       --gitlab-token $GITLAB_TOKEN \
+                                       --tag $INFRACOST_COMMENT_TAG \
+                                       --behavior new
   ```
 6. Restart the Atlantis application with the new environment vars and config.
 7. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment should be added.
@@ -157,6 +158,13 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
           - env:
               name: INFRACOST_COMMENT_TAG
               command: 'echo "${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}"'
+          # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+          #   complements the open source CLI by giving teams advanced visibility and controls.
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+          - env:
+              name: INFRACOST_ENABLE_CLOUD
+              value: true
           - init
           - plan
           - show # this writes the plan JSON to $SHOWFILE
@@ -174,15 +182,12 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
             # You can use `tag` to customize the hidden markdown tag used to detect comments posted by Infracost. We pass in the project directory here
             # so that there are no conflicts across projects when posting to the pull request. This is especially important if you
             # use a comment behavior other than "new".
-            # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-            #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-            #   contain any cloud credentials or secrets.
-            INFRACOST_ENABLE_CLOUD​=true infracost comment azure-repos --repo-url $AZURE_REPO_URL \
-                                                                       --pull-request $PULL_NUM \
-                                                                       --path $INFRACOST_OUTPUT \
-                                                                       --azure-access-token $AZURE_ACCESS_TOKEN \
-                                                                       --tag $INFRACOST_COMMENT_TAG \
-                                                                       --behavior new
+            infracost comment azure-repos --repo-url $AZURE_REPO_URL \
+                                          --pull-request $PULL_NUM \
+                                          --path $INFRACOST_OUTPUT \
+                                          --azure-access-token $AZURE_ACCESS_TOKEN \
+                                          --tag $INFRACOST_COMMENT_TAG \
+                                          --behavior new
   ```
 
 6. Restart the Atlantis application with the new environment vars and config.
