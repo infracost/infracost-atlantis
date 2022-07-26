@@ -31,6 +31,13 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
     - id: /.*/
       workflow: terraform-infracost
       post_workflow_hooks:
+        # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+        #   complements the open source CLI by giving teams advanced visibility and controls.
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+        - env:
+            name: INFRACOST_ENABLE_CLOUD
+            value: true 
         - run: |
             # post_workflow_hooks are executed after the repo workflow has run.
             # This enables you to post an Infracost comment with the combined cost output
@@ -46,14 +53,11 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
             # update: Create a single comment and update it. The "quietest" option.
             # hide-and-new: Minimize previous comments and create a new one.
             # delete-and-new: Delete previous comments and create a new one.
-            # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-            #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-            #   contain any cloud credentials or secrets.
-            INFRACOST_ENABLE_CLOUD​=true infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
-                                                                  --pull-request $PULL_NUM \
-                                                                  --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
-                                                                  --github-token $GITHUB_TOKEN \
-                                                                  --behavior new
+            infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+                                     --pull-request $PULL_NUM \
+                                     --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
+                                     --github-token $GITHUB_TOKEN \
+                                     --behavior new
 
             # remove the Infracost output directory so that `infracost comment` is not
             # triggered on an `atlantis apply`
@@ -65,6 +69,13 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
           - env:
               name: INFRACOST_OUTPUT
               command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
+          # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+          #   complements the open source CLI by giving teams advanced visibility and controls.
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+          - env:
+              name: INFRACOST_ENABLE_CLOUD
+              value: true
           - init
           - plan
           - show # this writes the plan JSON to $SHOWFILE
@@ -108,19 +119,23 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
         - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
         - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
       post_workflow_hooks:
+        # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+        #   complements the open source CLI by giving teams advanced visibility and controls.
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+        - env:
+            name: INFRACOST_ENABLE_CLOUD
+            value: true
         - run: |
             # Choose the commenting behavior, 'new' is a good default:
             # new: Create a new cost estimate comment on every run of Atlantis for each project.
             # update: Create a single comment and update it. The "quietest" option.
             # delete-and-new: Delete previous comments and create a new one.
-            # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-            #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-            #   contain any cloud credentials or secrets.
-            INFRACOST_ENABLE_CLOUD​=true infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
-                                                                  --merge-request $PULL_NUM \
-                                                                  --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
-                                                                  --gitlab-token $GITLAB_TOKEN \
-                                                                  --behavior new
+            infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+                                     --merge-request $PULL_NUM \
+                                     --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
+                                     --gitlab-token $GITLAB_TOKEN \
+                                     --behavior new
         - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
   workflows:
     terraform-infracost:
@@ -165,20 +180,24 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
         - run: rm -rf /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM
         - run: mkdir -p /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM
       post_workflow_hooks:
+        # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+        #   complements the open source CLI by giving teams advanced visibility and controls.
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+        - env:
+            name: INFRACOST_ENABLE_CLOUD
+            value: true
         - run: |
             # Choose the commenting behavior, 'new' is a good default:
             # new: Create a new cost estimate comment on every run of Atlantis for each project.
             # update: Create a single comment and update it. The "quietest" option.
             # delete-and-new: Delete previous comments and create a new one.
-            # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-            #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-            #   contain any cloud credentials or secrets.
-            INFRACOST_ENABLE_CLOUD​=true infracost comment azure-repos --repo-url $AZURE_REPO_URL \
-                                                                       --pull-request $PULL_NUM \
-                                                                       --path /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
-                                                                       --azure-access-token $AZURE_ACCESS_TOKEN \
-                                                                       --tag $INFRACOST_COMMENT_TAG \
-                                                                       --behavior new
+            infracost comment azure-repos --repo-url $AZURE_REPO_URL \
+                                          --pull-request $PULL_NUM \
+                                          --path /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
+                                          --azure-access-token $AZURE_ACCESS_TOKEN \
+                                          --tag $INFRACOST_COMMENT_TAG \
+                                          --behavior new
         - run: rm -rf /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM
   workflows:
     terraform-infracost:
@@ -222,6 +241,13 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
         - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
         - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM      
       post_workflow_hooks:
+        # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+        #   complements the open source CLI by giving teams advanced visibility and controls.
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+        - env:
+            name: INFRACOST_ENABLE_CLOUD
+            value: true
         - run: |
             # post_workflow_hooks are executed after the repo workflow has run.
             # This enables you to post an Infracost comment with the combined cost output
@@ -237,14 +263,11 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
             # update: Create a single comment and update it. The "quietest" option.
             # hide-and-new: Minimize previous comments and create a new one.
             # delete-and-new: Delete previous comments and create a new one.
-            # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-            #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-            #   contain any cloud credentials or secrets.
-            INFRACOST_ENABLE_CLOUD​=true infracost comment bitbucket --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
-                                                                     --pull-request $PULL_NUM \
-                                                                     --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
-                                                                     --bitbucket-token $BITBUCKET_TOKEN \
-                                                                     --behavior new
+            infracost comment bitbucket --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+                                        --pull-request $PULL_NUM \
+                                        --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
+                                        --bitbucket-token $BITBUCKET_TOKEN \
+                                        --behavior new
 
             # remove the Infracost output directory so that `infracost comment` is not
             # triggered on an `atlantis apply`

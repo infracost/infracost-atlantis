@@ -29,15 +29,19 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
             - env:
                 name: INFRACOST_OUTPUT
                 command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
+            # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+            #   complements the open source CLI by giving teams advanced visibility and controls.
+            #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+            #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+            - env:
+                name: INFRACOST_ENABLE_CLOUD
+                value: true
             # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
-            # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-            #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-            #   contain any cloud credentials or secrets.
             - run: |
-                INFRACOST_ENABLE_CLOUD​=true infracost breakdown --path=$SHOWFILE \
-                                                                 --format=json \
-                                                                 --log-level=info \
-                                                                 --out-file=$INFRACOST_OUTPUT
+                infracost breakdown --path=$SHOWFILE \
+                                    --format=json \
+                                    --log-level=info \
+                                    --out-file=$INFRACOST_OUTPUT
             - run: |
                 # Read the breakdown JSON and get costs using jq.
                 # Note jq comes as standard as part of infracost-atlantis Docker images. If you are using the base atlantis

@@ -38,6 +38,13 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
           - env:
               name: INFRACOST_SLACK_MESSAGE
               command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-slack-message.json"'
+          # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+          #   complements the open source CLI by giving teams advanced visibility and controls.
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+          - env:
+              name: INFRACOST_ENABLE_CLOUD
+              value: true
           - init
           - plan
           - show # this writes the plan JSON to $SHOWFILE
@@ -48,15 +55,12 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
                                   --log-level=info \
                                   --out-file=$INFRACOST_OUTPUT
           # Use Infracost comment to create a comment containing the results for this project
-          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-          #   contain any cloud credentials or secrets.
           - run: |
-              INFRACOST_ENABLE_CLOUD​=true infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
-                                      --pull-request $PULL_NUM \
-                                      --path $INFRACOST_OUTPUT \
-                                      --github-token $GITHUB_TOKEN \
-                                      --behavior new
+              infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+                                       --pull-request $PULL_NUM \
+                                       --path $INFRACOST_OUTPUT \
+                                       --github-token $GITHUB_TOKEN \
+                                       --behavior new
           # Use Infracost output command to create a message payload for Slack
           - run: |
               infracost output --path $INFRACOST_OUTPUT \
@@ -114,6 +118,13 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
           - env:
               name: INFRACOST_SLACK_MESSAGE
               command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-slack-message.json"'
+          # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+          #   complements the open source CLI by giving teams advanced visibility and controls.
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+          - env:
+              name: INFRACOST_ENABLE_CLOUD
+              value: true
           - init
           - plan
           - show # this writes the plan JSON to $SHOWFILE
@@ -124,15 +135,12 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
                                   --log-level=info \
                                   --out-file=$INFRACOST_OUTPUT
           # Use Infracost comment to create a comment containing the results for this project
-          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-          #   contain any cloud credentials or secrets.
           - run: |
-              INFRACOST_ENABLE_CLOUD​=true infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
-                                      --merge-request $PULL_NUM \
-                                      --path $INFRACOST_OUTPUT \
-                                      --gitlab-token $GITLAB_TOKEN \
-                                      --behavior new
+              infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+                                       --merge-request $PULL_NUM \
+                                       --path $INFRACOST_OUTPUT \
+                                       --gitlab-token $GITLAB_TOKEN \
+                                       --behavior new
           # Use Infracost output command to create a message payload for Slack
           - run: |
               infracost output --path $INFRACOST_OUTPUT \
@@ -191,6 +199,13 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
           - env:
               name: INFRACOST_SLACK_MESSAGE
               command: 'echo "/tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-slack-message.json"'
+          # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
+          #   complements the open source CLI by giving teams advanced visibility and controls.
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
+          - env:
+              name: INFRACOST_ENABLE_CLOUD
+              value: true
           - init
           - plan
           - show # this writes the plan JSON to $SHOWFILE
@@ -201,11 +216,8 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
                                   --log-level=info \
                                   --out-file=$INFRACOST_OUTPUT
           # Use Infracost comment to create a comment containing the results for this project
-          # The INFRACOST_ENABLE_CLOUD​=true section instructs the CLI to send its JSON output to Infracost Cloud.
-          #   This SaaS product gives you visibility across all changes in a dashboard. The JSON output does not
-          #   contain any cloud credentials or secrets.
           - run: |
-              INFRACOST_ENABLE_CLOUD​=true infracost comment azure-repos --repo-url $AZURE_REPO_URL \
+              infracost comment azure-repos --repo-url $AZURE_REPO_URL \
                                             --pull-request $PULL_NUM \
                                             --path $INFRACOST_OUTPUT \
                                             --azure-access-token $AZURE_ACCESS_TOKEN \
