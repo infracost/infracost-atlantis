@@ -121,6 +121,10 @@ If you use Atlantis with Terragrunt, you should:
             # Add custom steps here from the examples mentioned elsewhere in this readme
     ```
 
+### Overriding metadata
+
+If you use Infracost Cloud, you might find it useful to [override metadata](https://www.infracost.io/docs/features/environment_variables/#environment-variables-to-override-metadata) such as the pull request author or title that is shown on the Infracost Cloud dashboard.
+
 ## Contributing
 
 Issues and pull requests are welcome! For development details, see the [contributing](https://github.com/infracost/infracost-atlantis/blob/master/CONTRIBUTING.md) guide. For major changes, including interface changes, please open an issue first to discuss what you would like to change. [Join our community Slack channel](https://www.infracost.io/community-chat), we are a friendly bunch and happy to help you get started :)
