@@ -44,7 +44,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
                 infracost breakdown --path=$SHOWFILE \
                                     --format=json \
                                     --log-level=info \
-                                    --out-file=$INFRACOST_OUTPUT
+                                    --out-file=$INFRACOST_OUTPUT \
                                     --project-name=$REPO_REL_DIR
             - run: |
                 # Read the breakdown JSON and get costs using jq.
