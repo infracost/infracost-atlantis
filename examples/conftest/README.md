@@ -32,7 +32,7 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
                                   --format=json \
                                   --out-file=$INFRACOST_OUTPUT \
                                   --log-level=warn \
-                                  --no-color
+                                  --no-color \
                                   --project-name=$REPO_REL_DIR
           - policy_check:
               extra_args: [ "-p /home/atlantis/policy", "--namespace", "infracost", "$INFRACOST_OUTPUT" ]
