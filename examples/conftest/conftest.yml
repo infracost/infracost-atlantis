@@ -36,8 +36,15 @@ workflows:
                                 --out-file=$INFRACOST_OUTPUT \
                                 --log-level=warn \
                                 --no-color
+                                --project-name=$REPO_REL_DIR
         - policy_check:
-            extra_args: [ "-p /home/atlantis/policy", "--namespace", "infracost", "$INFRACOST_OUTPUT" ]
+            extra_args:
+              [
+                "-p /home/atlantis/policy",
+                "--namespace",
+                "infracost",
+                "$INFRACOST_OUTPUT",
+              ]
 policies:
   owners:
     users:
