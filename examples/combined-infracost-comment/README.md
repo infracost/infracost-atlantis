@@ -16,16 +16,18 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
 
 ## Running with GitHub
 
-
 1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. You'll need to pass the following custom env var into the container.
+
   ```sh
   GITHUB_TOKEN=<your-github-token>
   INFRACOST_API_KEY=<your-infracost-api-token>
   ```
+
 5. Add the following yaml spec to `repos.yaml` or `atlantis.yaml` config files:
+
   ```yaml
   repos:
     - id: /.*/
@@ -33,11 +35,11 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       post_workflow_hooks:
         # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
         #   complements the open source CLI by giving teams advanced visibility and controls.
-        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud
         #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
         - env:
             name: INFRACOST_ENABLE_CLOUD
-            value: true 
+            value: true
         - run: |
             # post_workflow_hooks are executed after the repo workflow has run.
             # This enables you to post an Infracost comment with the combined cost output
@@ -71,7 +73,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
               command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
           # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
           #   complements the open source CLI by giving teams advanced visibility and controls.
-          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud
           #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
           - env:
               name: INFRACOST_ENABLE_CLOUD
@@ -89,7 +91,9 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
                                   --format=json \
                                   --log-level=info \
                                   --out-file=$INFRACOST_OUTPUT
+                                  --project-name=$REPO_REL_DIR
   ```
+
 6. Restart the Atlantis application with the new environment vars and config.
 7. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment should be added and show details for every changed project.
 
@@ -105,11 +109,14 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. You'll need to pass the following custom env var into the container.
+
   ```sh
   GITLAB_TOKEN=<your-gitlab-token>
   INFRACOST_API_KEY=<your-infracost-api-token>
   ```
+
 5. Add the following yaml spec to `repos.yaml` config files:
+
   ```yaml
   repos:
     - id: /.*/
@@ -121,7 +128,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       post_workflow_hooks:
         # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
         #   complements the open source CLI by giving teams advanced visibility and controls.
-        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud
         #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
         - env:
             name: INFRACOST_ENABLE_CLOUD
@@ -148,8 +155,9 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
           - plan
           - show # this writes the plan JSON to $SHOWFILE
           # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
-          - run: infracost breakdown --path=$SHOWFILE --format=json --log-level=info --out-file=$INFRACOST_OUTPUT
+          - run: infracost breakdown --path=$SHOWFILE --format=json --log-level=info --out-file=$INFRACOST_OUTPUT --project-name=$REPO_REL_DIR
   ```
+
 6. Restart the Atlantis application with the new environment vars and config.
 7. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment should be added and show details for every changed project.
 
@@ -165,12 +173,15 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+
   ```sh
   AZURE_ACCESS_TOKEN=<your-azure-devops-access-token-or-pat>
   AZURE_REPO_URL=<your-azure-repo-url> # i.e., https://dev.azure.com/your-org/your-project/_git/your-repo
   INFRACOST_API_KEY=<your-infracost-api-token>
   ```
+
 3. Add the following yaml spec to `repos.yaml` config files:
+
   ```yaml
   repos:
     - id: /.*/
@@ -182,7 +193,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       post_workflow_hooks:
         # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
         #   complements the open source CLI by giving teams advanced visibility and controls.
-        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud
         #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
         - env:
             name: INFRACOST_ENABLE_CLOUD
@@ -210,8 +221,9 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
           - plan
           - show # this writes the plan JSON to $SHOWFILE
           # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
-          - run: infracost breakdown --path=$SHOWFILE --format=json --log-level=info --out-file=$INFRACOST_OUTPUT
+          - run: infracost breakdown --path=$SHOWFILE --format=json --log-level=info --out-file=$INFRACOST_OUTPUT --project-name=$REPO_REL_DIR
   ```
+
 6. Restart the Atlantis application with the new environment vars and config.
 7. Send a pull request in Azure Repos to change something in the Terraform code, the Infracost merge request comment should be added and show details for every changed project.
 
@@ -227,11 +239,14 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+
   ```sh
   BITBUCKET_TOKEN=<your-bitbucket-token> # for Bitbucket Cloud this should be username:token, where the token can be a user or App password. For Bitbucket Server provide only an HTTP access token.
   INFRACOST_API_KEY=<your-infracost-api-token>
   ```
+
 5. Add the following yaml spec to `repos.yaml` config files:
+
   ```yaml
   repos:
     - id: /.*/
@@ -239,11 +254,11 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       pre_workflow_hooks:
         # Clean up any files left over from previous runs
         - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
-        - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM      
+        - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
       post_workflow_hooks:
         # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
         #   complements the open source CLI by giving teams advanced visibility and controls.
-        #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+        #   The cost estimates are transmitted in JSON format and do not contain any cloud
         #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
         - env:
             name: INFRACOST_ENABLE_CLOUD
@@ -292,7 +307,9 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
                                   --format=json \
                                   --log-level=info \
                                   --out-file=$INFRACOST_OUTPUT
+                                  --project-name=$REPO_REL_DIR
   ```
+
 6. Restart the Atlantis application with the new environment vars and config.
 7. Send a pull request in Bitbucket to change something in the Terraform code, the Infracost pull request comment should be added and show details for every changed project.
 
