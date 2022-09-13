@@ -186,7 +186,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               infracost breakdown --path=$SHOWFILE \
                                   --format=json \
                                   --log-level=info \
-                                  --out-file=$INFRACOST_OUTPUT
+                                  --out-file=$INFRACOST_OUTPUT \
                                   --project-name=$REPO_REL_DIR
           - run: |
             # Choose the commenting behavior, 'new' is a good default:
