@@ -13,6 +13,7 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
 ## Configuration
 
 1. Add the YAML contents of this file to your `repos.yaml` or `atlantis.yaml` server side config file:
+
   ```yaml
   repos:
     - id: /.*/
@@ -31,7 +32,8 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
                                   --format=json \
                                   --out-file=$INFRACOST_OUTPUT \
                                   --log-level=warn \
-                                  --no-color
+                                  --no-color \
+                                  --project-name=$REPO_REL_DIR
           - policy_check:
               extra_args: [ "-p /home/atlantis/policy", "--namespace", "infracost", "$INFRACOST_OUTPUT" ]
   policies:
@@ -43,7 +45,9 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
         path: /home/atlantis/policy
         source: local
   ```
+
 2. Create a policy file in the [Rego language](https://www.openpolicyagent.org/docs/latest/policy-language/) `policy.rego` and make it available at `/home/atlantis/policy`:
+
   ```rego
   package infracost
 
@@ -88,7 +92,9 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
           )
   }
   ```
+
 3. On the Atlantis server, export env vars for the following. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+
   ```
   export INFRACOST_API_KEY=<your-infracost-api-token>
   ```
@@ -96,6 +102,7 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
 ## Running with GitHub
 
 1. Run the `infracost/infracost-atlantis` image, which includes the Infracost CLI in addition to Atlantis:
+
   ```
   docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
     --mount type=bind,source=$(pwd)/examples/conftest/conftest.yml,target=/home/atlantis/repo.yml \
@@ -108,12 +115,14 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
     --repo-config=/home/atlantis/repo.yml \
     --enable-policy-checks
   ```
+
 2. Send a pull request in GitHub to change something in Terraform, note the policy checks are performed.
 3. Experiment with different cost policies by editing `policy.rego`.
 
 ## Running with GitLab
 
 1. Run the `infracost/infracost-atlantis` image, which includes the Infracost CLI in addition to Atlantis:
+
   ```
   docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
     --mount type=bind,source=$(pwd)/examples/conftest/conftest.yml,target=/home/atlantis/repo.yml \
@@ -126,12 +135,14 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
     --repo-config=/home/atlantis/repo.yml \
     --enable-policy-checks
   ```
+
 2. Send a merge request in GitLab to change something in Terraform, note the policy checks are performed.
 3. Experiment with different cost policies by editing `policy.rego`.
 
 ## Running with Azure Repos
 
 1. Run the `infracost/infracost-atlantis` image, which includes the Infracost CLI in addition to Atlantis:
+
   ```
   docker run -p 4141:4141 -e INFRACOST_API_KEY=$INFRACOST_API_KEY \
     --mount type=bind,source=$(pwd)/examples/conftest/conftest.yml,target=/home/atlantis/repo.yml \
@@ -145,6 +156,7 @@ This example shows how to use [Atlantis' built-in Conftest](https://www.runatlan
     --repo-config=/home/atlantis/repo.yml \
     --enable-policy-checks
   ```
+
 2. Send a merge request in GitLab to change something in Terraform, note the policy checks are performed.
 3. Experiment with different cost policies by editing `policy.rego`.
 

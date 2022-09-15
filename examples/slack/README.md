@@ -18,12 +18,15 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+
   ```sh
   GITHUB_TOKEN=<your-github-token>
   INFRACOST_API_KEY=<your-infracost-api-token>
   SLACK_WEBHOOK_URL: <your-slack-webhook-url>
   ```
+
 5. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
+
   ```yaml
   repos:
     - id: /.*/
@@ -40,7 +43,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-slack-message.json"'
           # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
           #   complements the open source CLI by giving teams advanced visibility and controls.
-          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud
           #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
           - env:
               name: INFRACOST_ENABLE_CLOUD
@@ -53,7 +56,8 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               infracost breakdown --path=$SHOWFILE \
                                   --format=json \
                                   --log-level=info \
-                                  --out-file=$INFRACOST_OUTPUT
+                                  --out-file=$INFRACOST_OUTPUT \
+                                  --project-name=$REPO_REL_DIR
           # Use Infracost comment to create a comment containing the results for this project
           - run: |
               infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
@@ -85,6 +89,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 
               curl -X POST -H "Content-type: application/json" -d @$INFRACOST_SLACK_MESSAGE $SLACK_WEBHOOK_URL
   ```
+
 6. Restart the Atlantis application with the new environment vars and config.
 7. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment will be added and a Slack message will be posted if there is cost change.
 8. To see the test pull request costs in Infracost Cloud, [log in](https://dashboard.infracost.io/) > switch to your organization > Projects. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
@@ -98,12 +103,15 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+
   ```sh
   GITLAB_TOKEN=<your-gitlab-token>
   INFRACOST_API_KEY=<your-infracost-api-token>
   SLACK_WEBHOOK_URL: <your-slack-webhook-url>
   ```
+
 5. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
+
   ```yaml
   repos:
     - id: /.*/
@@ -120,7 +128,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-slack-message.json"'
           # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
           #   complements the open source CLI by giving teams advanced visibility and controls.
-          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud
           #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
           - env:
               name: INFRACOST_ENABLE_CLOUD
@@ -133,7 +141,8 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               infracost breakdown --path=$SHOWFILE \
                                   --format=json \
                                   --log-level=info \
-                                  --out-file=$INFRACOST_OUTPUT
+                                  --out-file=$INFRACOST_OUTPUT \
+                                  --project-name=$REPO_REL_DIR
           # Use Infracost comment to create a comment containing the results for this project
           - run: |
               infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
@@ -165,6 +174,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 
               curl -X POST -H "Content-type: application/json" -d @$INFRACOST_SLACK_MESSAGE $SLACK_WEBHOOK_URL
   ```
+
 6. Restart the Atlantis application with the new environment vars and config.
 7. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment will be added and a Slack message will be posted if there is cost change.
 8. To see the test pull request costs in Infracost Cloud, [log in](https://dashboard.infracost.io/) > switch to your organization > Projects. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
@@ -178,13 +188,16 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+
   ```sh
   AZURE_ACCESS_TOKEN=<your-azure-devops-access-token-or-pat>
   AZURE_REPO_URL=<your-azure-repo-url> # i.e., https://dev.azure.com/your-org/your-project/_git/your-repo
   INFRACOST_API_KEY=<your-infracost-api-token>
   SLACK_WEBHOOK_URL: <your-slack-webhook-url>
   ```
+
 5. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
+
   ```yaml
   repos:
     - id: /.*/
@@ -201,7 +214,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               command: 'echo "/tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-slack-message.json"'
           # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
           #   complements the open source CLI by giving teams advanced visibility and controls.
-          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud
           #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
           - env:
               name: INFRACOST_ENABLE_CLOUD
@@ -214,7 +227,8 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               infracost breakdown --path=$SHOWFILE \
                                   --format=json \
                                   --log-level=info \
-                                  --out-file=$INFRACOST_OUTPUT
+                                  --out-file=$INFRACOST_OUTPUT \
+                                  --project-name=$REPO_REL_DIR
           # Use Infracost comment to create a comment containing the results for this project
           - run: |
               infracost comment azure-repos --repo-url $AZURE_REPO_URL \

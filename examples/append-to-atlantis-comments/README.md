@@ -11,10 +11,13 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 
 4. You'll need to pass the following custom env var into the container.
+
    ```sh
    INFRACOST_API_KEY=<your-infracost-api-token>
    ```
+
 5. Add the following yaml spec to `repos.yaml` or `atlantis.yaml` config files:
+
     ```yaml
     repos:
       - id: /.*/
@@ -31,7 +34,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
                 command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
             # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
             #   complements the open source CLI by giving teams advanced visibility and controls.
-            #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+            #   The cost estimates are transmitted in JSON format and do not contain any cloud
             #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
             - env:
                 name: INFRACOST_ENABLE_CLOUD
@@ -41,7 +44,8 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
                 infracost breakdown --path=$SHOWFILE \
                                     --format=json \
                                     --log-level=info \
-                                    --out-file=$INFRACOST_OUTPUT
+                                    --out-file=$INFRACOST_OUTPUT \
+                                    --project-name=$REPO_REL_DIR
             - run: |
                 # Read the breakdown JSON and get costs using jq.
                 # Note jq comes as standard as part of infracost-atlantis Docker images. If you are using the base atlantis
@@ -147,6 +151,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
 
                 printf "$msg"
     ```
+
 6. Restart the Atlantis application with the new environment vars and config
 7. Send a pull request to change something in the Terraform code, the Infracost output should be added to your Atlantis comment.
 

@@ -18,11 +18,14 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+
   ```sh
   GITHUB_TOKEN=<your-github-token>
   INFRACOST_API_KEY=<your-infracost-api-token>
   ```
+
 5. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
+
   ```yaml
   repos:
     - id: /.*/
@@ -46,6 +49,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
                                   --format=json \
                                   --log-level=info \
                                   --out-file=$INFRACOST_OUTPUT
+                                  --project-name=$REPO_REL_DIR
           - run: |
               # Choose the commenting behavior, 'new' is a good default:
               #   new: Create a new cost estimate comment on every run of Atlantis for each project.
@@ -62,6 +66,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
                                        --tag $INFRACOST_COMMENT_TAG \
                                        --behavior new
   ```
+
 6. Restart the Atlantis application with the new environment vars and config.
 7. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment should be added.
 8. To see the test pull request costs in Infracost Cloud, [log in](https://dashboard.infracost.io/) > switch to your organization > Projects. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
@@ -75,11 +80,14 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+
   ```sh
   GITLAB_TOKEN=<your-gitlab-token>
   INFRACOST_API_KEY=<your-infracost-api-token>
   ```
+
 5. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
+
   ```yaml
   repos:
     - id: /.*/
@@ -96,11 +104,11 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               command: 'echo "$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}"'
           # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
           #   complements the open source CLI by giving teams advanced visibility and controls.
-          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud
           #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
           - env:
               name: INFRACOST_ENABLE_CLOUD
-              value: true              
+              value: true
           - init
           - plan
           - show # this writes the plan JSON to $SHOWFILE
@@ -109,7 +117,8 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               infracost breakdown --path=$SHOWFILE \
                                   --format=json \
                                   --log-level=info \
-                                  --out-file=$INFRACOST_OUTPUT
+                                  --out-file=$INFRACOST_OUTPUT \
+                                  --project-name=$REPO_REL_DIR
           - run: |
               # Choose the commenting behavior, 'new' is a good default:
               #   new: Create a new cost estimate comment on every run of Atlantis for each project.
@@ -117,7 +126,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               #   delete-and-new: Delete previous comments and create a new one.
               # You can use `tag` to customize the hidden markdown tag used to detect comments posted by Infracost. We pass in the project directory here
               # so that there are no conflicts across projects when posting to the pull request. This is especially important if you
-              # use a comment behavior other than "new".              
+              # use a comment behavior other than "new".
               infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
                                        --merge-request $PULL_NUM \
                                        --path $INFRACOST_OUTPUT \
@@ -125,6 +134,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
                                        --tag $INFRACOST_COMMENT_TAG \
                                        --behavior new
   ```
+
 6. Restart the Atlantis application with the new environment vars and config.
 7. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment should be added.
 8. To see the test pull request costs in Infracost Cloud, [log in](https://dashboard.infracost.io/) > switch to your organization > Projects. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
@@ -138,12 +148,15 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.
 4. You'll need to pass the following custom env vars into the container. Retrieve your Infracost API key by running `infracost configure get api_key`. We recommend using your same API key in all environments. If you don't have one, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
+
   ```sh
   AZURE_ACCESS_TOKEN=<your-azure-devops-access-token-or-pat>
   AZURE_REPO_URL=<your-azure-repo-url> # i.e., https://dev.azure.com/your-org/your-project/_git/your-repo
   INFRACOST_API_KEY=<your-infracost-api-token>
   ```
+
 5. Add the following YAML spec to `repos.yaml` or `atlantis.yaml` config files:
+
   ```yaml
   repos:
     - id: /.*/
@@ -160,7 +173,7 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               command: 'echo "${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}"'
           # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
           #   complements the open source CLI by giving teams advanced visibility and controls.
-          #   The cost estimates are transmitted in JSON format and do not contain any cloud 
+          #   The cost estimates are transmitted in JSON format and do not contain any cloud
           #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
           - env:
               name: INFRACOST_ENABLE_CLOUD
@@ -173,7 +186,8 @@ For Bitbucket, see [our docs](https://www.infracost.io/docs/features/cli_command
               infracost breakdown --path=$SHOWFILE \
                                   --format=json \
                                   --log-level=info \
-                                  --out-file=$INFRACOST_OUTPUT
+                                  --out-file=$INFRACOST_OUTPUT \
+                                  --project-name=$REPO_REL_DIR
           - run: |
             # Choose the commenting behavior, 'new' is a good default:
             #   new: Create a new cost estimate comment on every run of Atlantis for each project.
