@@ -86,6 +86,10 @@ To use with Terraform modules that are hosted in a private git repository you ca
 
 To use with Terraform Cloud/Enterprise you can add the following flags to your `atlantis server` command: `--tfe-hostname='MY_TFE_HOSTNAME' --tfe-token='MY_TFE_TOKEN'`.
 
+### Project names
+
+Project names default to the relative path of the project using the Atlantis `$REPO_REL_DIR` environment variable. See [our docs](https://www.infracost.io/docs/infracost_cloud/key_concepts/#customize-project-names) to customize this.
+
 ### Terragrunt
 
 If you use Atlantis with Terragrunt, you should:
