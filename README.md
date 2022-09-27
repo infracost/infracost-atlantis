@@ -127,7 +127,7 @@ If you use Atlantis with Terragrunt, you should:
 
 ### Overriding metadata
 
-If you use Infracost Cloud, you might find it useful to [override metadata](https://www.infracost.io/docs/features/environment_variables/#environment-variables-to-override-metadata) such as the pull request author or title that is shown on the Infracost Cloud dashboard.
+If you use [Infracost Cloud](https://dashboard.infracost.io), you might find it useful to [override metadata](https://www.infracost.io/docs/features/environment_variables/#environment-variables-to-override-metadata) such as the pull request author or title that is shown on the Infracost Cloud dashboard.
 
 ## Contributing
 

@@ -32,13 +32,6 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
             - env:
                 name: INFRACOST_OUTPUT
                 command: 'echo "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM-$WORKSPACE-${REPO_REL_DIR//\//-}-infracost.json"'
-            # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
-            #   complements the open source CLI by giving teams advanced visibility and controls.
-            #   The cost estimates are transmitted in JSON format and do not contain any cloud
-            #   credentials or secrets (see https://infracost.io/docs/faq/ for more information).
-            - env:
-                name: INFRACOST_ENABLE_CLOUD
-                value: true
             # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
             - run: |
                 infracost breakdown --path=$SHOWFILE \
@@ -156,7 +149,6 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. The 
 7. Send a pull request to change something in the Terraform code, the Infracost output should be added to your Atlantis comment.
 
    <img src="screenshot.png" width=570 alt="Example screenshot" />
-8. To see the test pull request costs in Infracost Cloud, [log in](https://dashboard.infracost.io/) > switch to your organization > Projects. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
+8. [Enable Infracost Cloud](https://dashboard.infracost.io/) and trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information. This is our SaaS product that builds on top of Infracost open source and enables team leads, managers and FinOps practitioners to see all cost estimates from a central place so they can help guide the team. To learn more, see [our docs](https://www.infracost.io/docs/infracost_cloud/get_started/).
 
-    <img src="/.github/assets/infracost-cloud-runs.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners to have visibility across all cost estimates in CI/CD" width="90%" />
-9. Follow [the docs](https://www.infracost.io/usage-file) if you'd also like to show cost for of usage-based resources such as AWS Lambda or S3. The usage for these resources are fetched from CloudWatch/cloud APIs and used to calculate an estimate.
+    <img src="/.github/assets/infracost-cloud-dashboard.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners visibility across all cost estimates in CI/CD" width="90%" />
