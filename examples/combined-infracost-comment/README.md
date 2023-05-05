@@ -16,6 +16,8 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
 
 ## Running with GitHub
 
+👉👉 We recommend using the [**free Infracost GitHub App**](https://www.infracost.io/docs/integrations/github_app/) instead as it has many benefits.
+
 1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
 3. Retrieve your Infracost API key by running `infracost configure get api_key`.

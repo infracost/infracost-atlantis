@@ -4,24 +4,22 @@ This repo shows how [Infracost](https://infracost.io) can be used with Atlantis,
 
 <img src="examples/combined-infracost-comment/screenshot.png" width=640 alt="Example screenshot" />
 
-Follow our [migration guide](https://www.infracost.io/docs/guides/atlantis_migration/) if you used our old version of this repo.
+## Usage
 
-## Usage methods
+Since Atlantis does not have a plugins concept, you need to decide which deployment option to use.
 
-Since Atlantis does not have a plugins concept, you need to make **two** decisions to integrate it with Infracost:
+Once you've decided, **<a href="examples/combined-infracost-comment/README.md">follow this guide</a>** to setup Infracost with Atlantis.
 
-### 1. Which deployment option do you want to use?
-
-#### a) Use our Docker images (recommended)
+### 1. Use our Docker images (recommended)
 Use our [`infracost-atlantis`](https://hub.docker.com/r/infracost/infracost-atlantis) Docker images that [extend](https://www.runatlantis.io/docs/deployment.html#customization) the Atlantis image to add Infracost. We maintain tags for the latest two 0.x versions of Atlantis:
-  - `infracost/infracost-atlantis:atlantis0.22-infracost0.10` latest patch version of Atlantis v0.22 and Infracost v0.10
-  - `infracost/infracost-atlantis:atlantis0.21-infracost0.10` latest patch version of Atlantis v0.21 and Infracost v0.10
+  - `infracost/infracost-atlantis:atlantis0.23-infracost0.10` latest patch version of Atlantis v0.22 and Infracost v0.10
+  - `infracost/infracost-atlantis:atlantis0.22-infracost0.10` latest patch version of Atlantis v0.21 and Infracost v0.10
   - `infracost/infracost-atlantis:latest` latest versions of Atlantis and Infracost
 
-#### b) Build your own Docker image
+### 2. Build your own Docker image
 If you already use a custom Docker image for Atlantis, copy the top `RUN` command from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
 
-#### c) Install in pre-workflow (good for testing)
+### 3. Install in pre-workflow (good for testing)
 Use Atlantis `pre_workflow_hooks` to dynamically install the Infracost CLI on a running Atlantis server (shown in the following repos.yml example). This enables you to test Infracost without changing your Docker image by installing it on each workflow run. Once you're happy with the results, you can use one of the above methods.
 
 To use this method, add the following `pre_workflow_hook` to your chosen option in the next step. Also change references to the Infracost CLI invocation to `/tmp/infracost` in the the next step. [Environment variables](https://www.infracost.io/docs/integrations/environment_variables/) such as `INFRACOST_API_KEY` also need to be passed into the Atlantis container.
@@ -38,35 +36,6 @@ To use this method, add the following `pre_workflow_hook` to your chosen option 
               tar -xvf infracost.tar.gz && \
               mv infracost-linux-amd64 /tmp/infracost
   ```
-
-### 2. How do you want multiple Terraform directories/workspaces to be handled?
-
-This option depends on what version of Atlantis you have and how you'd like to handle cost estimates for multiple Terraform directories/workspaces. The following table explains the options and links to instructions as well as screenshots.
-
-<table>
-  <thead>
-    <tr>
-        <th></th>
-        <th>If you're using Atlantis 0.18.2 or newer</th>
-        <th>If you're using older than Atlantis 0.18.2</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>a) Recommended:</b> combine cost estimates from multiple Terraform directories/workspaces into one Infracost pull request comment. Enables you to see the total cost estimate in one table.</td>
-      <td><a href="examples/combined-infracost-comment/README.md">Use this option</a></td>
-      <td>Not possible since post_workflow_hooks were added in Atlantis 0.18.2</td>
-    </tr>
-    <tr>
-      <td><b>b)</b> Post one Infracost pull request comment per Terraform directory/workspace. This is the best option for users who cannot upgrade Atlantis yet.</td>
-      <td colspan=2 align=center><a href="examples/multiple-infracost-comments/README.md">Use this option</a></td>
-    </tr>
-    <tr>
-      <td><b>c)</b> Append cost estimates to the bottom of Atlantis' "Show output" section of the pull request comment. Similar to option b) but the cost estimate is somewhat hidden. This is how our legacy integration worked but most users we talked to wanted option a).</td>
-      <td colspan=2 align=center><a href="examples/append-to-atlantis-comments/README.md">Use this option</a></td>
-    </tr>
-  </tbody>
-</table>
 
 ## Additional examples
 
@@ -127,7 +96,20 @@ If you use Atlantis with Terragrunt, you should:
 
 ### Overriding metadata
 
-If you use [Infracost Cloud](https://dashboard.infracost.io), you might find it useful to [override metadata](https://www.infracost.io/docs/features/environment_variables/#environment-variables-to-override-metadata) such as the pull request author or title that is shown on the Infracost Cloud dashboard.
+If you use [Infracost Cloud](https://dashboard.infracost.io), you might need to [override metadata](https://www.infracost.io/docs/features/environment_variables/#environment-variables-to-set-metadata) such as the pull request author or title that is shown on the Infracost Cloud dashboard.
+
+```bash
+INFRACOST_VCS_PROVIDER="github" # For GitHub Enterprise, also use "github"
+INFRACOST_VCS_REPOSITORY_URL="https://github.com/$BASE_REPO_OWNER/$BASE_REPO_NAME"
+INFRACOST_VCS_PULL_REQUEST_URL="$INFRACOST_VCS_REPOSITORY_URL/pulls/$PULL_NUM"
+INFRACOST_VCS_PULL_REQUEST_AUTHOR="$PULL_AUTHOR"
+INFRACOST_VCS_BASE_BRANCH="$BASE_BRANCH_NAME"
+
+INFRACOST_VCS_PULL_REQUEST_TITLE=\"$(curl -s \
+    -H "Accept: application/vnd.github+json" \
+    -H "Authorization: $GITHUB_TOKEN" \
+    "https://api.github.com/repos/$BASE_REPO_OWNER/$BASE_REPO_NAME/pulls/$PULL_NUM" | jq -r '.title')\"
+```
 
 ## Contributing
 
