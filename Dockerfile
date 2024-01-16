@@ -2,6 +2,9 @@
 ARG version=latest
 FROM ghcr.io/runatlantis/atlantis:${version}
 
+# Set to root user so we can install packages
+USER root
+
 # Set this to the minor version of Infracost CLI you want to use (e.g., v0.9, v0.10)
 ARG cli_version=v0.10
 
@@ -22,3 +25,6 @@ RUN \
   ln -s /home/atlantis/infracost_atlantis_diff.sh /infracost_atlantis_diff.sh && \
   npm install -g @infracost/compost
 ### End of legacy logic
+
+# Restore the atlantis user
+USER atlantis
