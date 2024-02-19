@@ -1,6 +1,11 @@
 # Infracost Atlantis Integration
 
-This repo shows how [Infracost](https://infracost.io) can be used with Atlantis, so you can see cloud cost estimates for Terraform in pull requests 💰
+### Try the GitHub or GitLab App
+👉👉 If you use Atlantis with GitHub/GitLab, we recommend using the free Infracost [**GitHub App**](https://www.infracost.io/docs/integrations/github_app/) or [**GitLab App**](https://www.infracost.io/docs/integrations/gitlab_app/) as they're much simpler to setup and faster to run
+
+---
+
+This repo shows how [Infracost](https://infracost.io) can be used with Atlantis, so you can see cloud cost estimates and FinOps best practices for Terraform in pull requests 💰
 
 <img src="examples/combined-infracost-comment/screenshot.png" width=640 alt="Example screenshot" />
 
@@ -41,23 +46,21 @@ To use this method, add the following `pre_workflow_hook` to your chosen option 
 
 Once you've decided, **<a href="examples/combined-infracost-comment/README.md">follow this guide</a>** to setup Infracost with Atlantis.
 
-## Additional examples
+### 3. Test the integration
 
-The following examples might be helpful to use alongside the above examples:
-- [Slack](./examples/slack/README.md): post cost estimates to Slack
-- [Conftest](./examples/conftest/README.md): check cost policies using Atlantis' native Conftest integration and Infracost cost estimates.
+Follow [these simple steps](https://www.infracost.io/docs/infracost_cloud/get_started/#4-send-a-pull-request) to test the integration. This is important as it ensures the CLI commands are running correctly in your workflow 👌
 
-If you do not use Conftest/Open Policy Agent, you can still set [thresholds](./examples/thresholds/README.md) using bash and [jq](https://stedolan.github.io/jq/) so notifications or pull request comments are only sent when cost thresholds are exceeded.
+- [Infracost Cloud](https://dashboard.infracost.io) is our SaaS product that builds on top of Infracost open source. It enables team leads, managers and FinOps practitioners to setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/), [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) and [best practices](https://www.infracost.io/docs/infracost_cloud/cost_policies/) to help guide the team. For example, you can check for required tag keys/values, or suggest switching AWS gp2 volumes to gp3 as they are more performant and cheaper.
+
+    If you **do not** want to use [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and disable the dashboard. This causes the CLI not to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
+
+    <img src=".github/assets/infracost-cloud-dashboard.png" alt="Infracost Cloud enables you to check for best practices such as using latest generation instance types or block storage, as well as setup tagging policies and guardrails to help guide the team." />
 
 ## Atlantis usage notes
 
 ### Private Terraform modules
 
 To use with Terraform modules that are hosted in a private git repository you can add the `--write-git-creds` flag to your `atlantis server` command.
-
-### Terraform Cloud/Enterprise
-
-To use with Terraform Cloud/Enterprise you can add the following flags to your `atlantis server` command: `--tfe-hostname='MY_TFE_HOSTNAME' --tfe-token='MY_TFE_TOKEN'`.
 
 ### Project names
 
