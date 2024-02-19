@@ -16,7 +16,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
 
 ## Running with GitHub
 
-👉👉 We recommend using the [**free Infracost GitHub App**](https://www.infracost.io/docs/integrations/github_app/) instead as it has many benefits.
+👉👉 We recommend using the [**free Infracost GitHub App**](https://www.infracost.io/docs/integrations/github_app/) as it's much simpler to setup and faster to run
 
 1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
@@ -83,18 +83,11 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
   ```
 
 6. Restart the Atlantis application with the new environment vars and config.
-7. Send a pull request in GitHub to change something in the Terraform code, the Infracost pull request comment should be added and show details for every changed project.
-
-   <img src="screenshot.png" width=640 alt="Example screenshot" />
-8. In [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and enable the dashboard, then trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
-
-    This is our SaaS product that builds on top of Infracost open source. It enables team leads, managers and FinOps practitioners to setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/), [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) and [best practices](https://www.infracost.io/docs/infracost_cloud/cost_policies/) to help guide the team. For example, you can check for required tag keys/values, or suggest switching AWS GP2 volumes to GP3 as they are more performant and cheaper.
-
-    <img src="/.github/assets/infracost-cloud-dashboard.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners visibility across all cost estimates in CI/CD" width="58%" /><img src="/.github/assets/pull-request-tags.png" alt="Communicate and enforce FinOps tags in pull requests" width="42%" />
+7. Continue with the setup steps [here](../../?tab=readme-ov-file#3-test-the-integration).
 
 ## Running with GitLab
 
-👉👉 We recommend using the [**free Infracost GitLab App**](https://www.infracost.io/docs/integrations/gitlab_app/) instead as it has many benefits.
+👉👉 We recommend using the [**free Infracost GitLab App**](https://www.infracost.io/docs/integrations/gitlab_app/) as it's much simpler to setup and faster to run
 
 1. Update your setup to use the [infracost-atlantis](https://hub.docker.com/r/infracost/infracost-atlantis) Docker image
 2. If you haven't done so already, [download Infracost](https://www.infracost.io/docs/#quick-start) and run `infracost auth login` to get a free API key.
@@ -143,14 +136,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
   ```
 
 6. Restart the Atlantis application with the new environment vars and config.
-7. Send a merge request in GitLab to change something in the Terraform code, the Infracost merge request comment should be added and show details for every changed project.
-
-   <img src="/.github/assets/gitlab-pr-comment.png" width=640 alt="Example screenshot" />
-8. In [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and enable the dashboard, then trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
-
-    This is our SaaS product that builds on top of Infracost open source. It enables team leads, managers and FinOps practitioners to setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/), [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) and [best practices](https://www.infracost.io/docs/infracost_cloud/cost_policies/) to help guide the team. For example, you can check for required tag keys/values, or suggest switching AWS GP2 volumes to GP3 as they are more performant and cheaper.
-
-    <img src="/.github/assets/infracost-cloud-dashboard.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners visibility across all cost estimates in CI/CD" width="58%" /><img src="/.github/assets/pull-request-tags.png" alt="Communicate and enforce FinOps tags in pull requests" width="42%" />
+7. Continue with the setup steps [here](../../?tab=readme-ov-file#3-test-the-integration).
 
 ## Running with Azure Repos
 
@@ -203,14 +189,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
   ```
 
 6. Restart the Atlantis application with the new environment vars and config.
-7. Send a pull request in Azure Repos to change something in the Terraform code, the Infracost merge request comment should be added and show details for every changed project.
-
-   <img src="/.github/assets/azure-pr-comment.png" width=640 alt="Example screenshot" />
-8. In [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and enable the dashboard, then trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
-
-    This is our SaaS product that builds on top of Infracost open source. It enables team leads, managers and FinOps practitioners to setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/), [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) and [best practices](https://www.infracost.io/docs/infracost_cloud/cost_policies/) to help guide the team. For example, you can check for required tag keys/values, or suggest switching AWS GP2 volumes to GP3 as they are more performant and cheaper.
-
-    <img src="/.github/assets/infracost-cloud-dashboard.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners visibility across all cost estimates in CI/CD" width="58%" /><img src="/.github/assets/pull-request-tags.png" alt="Communicate and enforce FinOps tags in pull requests" width="42%" />
+7. Continue with the setup steps [here](../../?tab=readme-ov-file#3-test-the-integration).
 
 ## Running with Bitbucket
 
@@ -283,11 +262,4 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
   ```
 
 6. Restart the Atlantis application with the new environment vars and config.
-7. Send a pull request in Bitbucket to change something in the Terraform code, the Infracost pull request comment should be added and show details for every changed project.
-
-   <img src="/.github/assets/bitbucket-pr-comment.png" width=640 alt="Example screenshot" />
-8. In [Infracost Cloud](https://dashboard.infracost.io), go to Org Settings and enable the dashboard, then trigger your CI/CD pipeline again. This causes the CLI to send its JSON output to your dashboard; the JSON does not contain any cloud credentials or secrets, see the [FAQ](https://infracost.io/docs/faq/) for more information.
-
-    This is our SaaS product that builds on top of Infracost open source. It enables team leads, managers and FinOps practitioners to setup [tagging policies](https://www.infracost.io/docs/infracost_cloud/tagging_policies/), [guardrails](https://www.infracost.io/docs/infracost_cloud/guardrails/) and [best practices](https://www.infracost.io/docs/infracost_cloud/cost_policies/) to help guide the team. For example, you can check for required tag keys/values, or suggest switching AWS GP2 volumes to GP3 as they are more performant and cheaper.
-
-    <img src="/.github/assets/infracost-cloud-dashboard.png" alt="Infracost Cloud gives team leads, managers and FinOps practitioners visibility across all cost estimates in CI/CD" width="58%" /><img src="/.github/assets/pull-request-tags.png" alt="Communicate and enforce FinOps tags in pull requests" width="42%" />
+7. Continue with the setup steps [here](../../?tab=readme-ov-file#3-test-the-integration).
