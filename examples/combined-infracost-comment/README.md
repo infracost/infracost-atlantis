@@ -71,10 +71,6 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
           - show # this writes the plan JSON to $SHOWFILE
           # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
           - run: |
-              if [ ! -d "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM" ]; then
-                mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
-              fi
-
               infracost breakdown --path=$SHOWFILE \
                                   --format=json \
                                   --log-level=info \
@@ -212,17 +208,11 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       pre_workflow_hooks:
         # Clean up any files left over from previous runs
         - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+          commands: plan
         - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+          commands: plan
       post_workflow_hooks:
         - run: |
-            # post_workflow_hooks are executed after the repo workflow has run.
-            # This enables you to post an Infracost comment with the combined cost output
-            # from all your projects. However, post_workflow_hooks are also triggered when
-            # an apply occurs. In order to stop commenting on PRs twice we need to check
-            # if the Infracost output directory created in our 'plan' stage exists before continuing.
-            if [ ! -d "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM" ]; then
-              exit 0
-            fi
 
             # Choose the commenting behavior, 'new' is a good default:
             # new: Create a new cost estimate comment on every run of Atlantis for each project.
@@ -237,7 +227,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
 
             # remove the Infracost output directory so that `infracost comment` is not
             # triggered on an `atlantis apply`
-        - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+          commands: plan
   workflows:
     terraform-infracost:
       plan:
@@ -250,10 +240,6 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
           - show # this writes the plan JSON to $SHOWFILE
           # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
           - run: |
-              if [ ! -d "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM" ]; then
-                mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
-              fi
-
               infracost breakdown --path=$SHOWFILE \
                                   --format=json \
                                   --log-level=info \
