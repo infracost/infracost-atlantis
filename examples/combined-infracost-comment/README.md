@@ -34,17 +34,14 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
   repos:
     - id: /.*/
       workflow: terraform-infracost
+      pre_workflow_hooks:
+        # Clean up any files left over from previous runs
+        - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+          commands: plan
+        - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+          commands: plan
       post_workflow_hooks:
         - run: |
-            # post_workflow_hooks are executed after the repo workflow has run.
-            # This enables you to post an Infracost comment with the combined cost output
-            # from all your projects. However, post_workflow_hooks are also triggered when
-            # an apply occurs. In order to stop commenting on PRs twice we need to check
-            # if the Infracost output directory created in our 'plan' stage exists before continuing.
-            if [ ! -d "/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM" ]; then
-              exit 0
-            fi
-
             # Choose the commenting behavior, 'new' is a good default:
             # new: Create a new cost estimate comment on every run of Atlantis for each project.
             # update: Create a single comment and update it. The "quietest" option.
@@ -55,10 +52,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
                                      --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
                                      --github-token $GITHUB_TOKEN \
                                      --behavior new
-
-            # remove the Infracost output directory so that `infracost comment` is not
-            # triggered on an `atlantis apply`
-            rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+          commands: plan
   workflows:
     terraform-infracost:
       plan:
@@ -104,7 +98,9 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       pre_workflow_hooks:
         # Clean up any files left over from previous runs
         - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+          command: plan
         - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+          command: plan
       post_workflow_hooks:
         - run: |
             # Choose the commenting behavior, 'new' is a good default:
@@ -116,7 +112,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
                                      --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
                                      --gitlab-token $GITLAB_TOKEN \
                                      --behavior new
-        - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+          command: plan
   workflows:
     terraform-infracost:
       plan:
@@ -156,7 +152,9 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       pre_workflow_hooks:
         # Clean up any files left over from previous runs
         - run: rm -rf /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM
+          command: plan
         - run: mkdir -p /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM
+          command: plan
       post_workflow_hooks:
         - run: |
             # Choose the commenting behavior, 'new' is a good default:
@@ -169,7 +167,7 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
                                           --azure-access-token $AZURE_ACCESS_TOKEN \
                                           --tag $INFRACOST_COMMENT_TAG \
                                           --behavior new
-        - run: rm -rf /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM
+          command: plan
   workflows:
     terraform-infracost:
       plan:
@@ -213,7 +211,6 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
           commands: plan
       post_workflow_hooks:
         - run: |
-
             # Choose the commenting behavior, 'new' is a good default:
             # new: Create a new cost estimate comment on every run of Atlantis for each project.
             # update: Create a single comment and update it. The "quietest" option.
@@ -224,9 +221,6 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
                                         --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
                                         --bitbucket-token $BITBUCKET_TOKEN \
                                         --behavior new
-
-            # remove the Infracost output directory so that `infracost comment` is not
-            # triggered on an `atlantis apply`
           commands: plan
   workflows:
     terraform-infracost:
