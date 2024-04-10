@@ -1,7 +1,4 @@
-# Combined Infracost comment
-
-| Note: This examples requires Atlantis versions 0.18.2 or later due to the use of post_workflow_hooks |
-| --- |
+# Infracost comment
 
 This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even when a repository that contains multiple terraform directories or workspaces is used, this example uses `infracost comment` to post a combined cost estimate comment for all modified projects.
 
