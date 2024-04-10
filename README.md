@@ -7,7 +7,7 @@
 
 This repo shows how [Infracost](https://infracost.io) can be used with Atlantis, so you can see cloud cost estimates and FinOps best practices for Terraform in pull requests 💰
 
-<img src="examples/combined-infracost-comment/screenshot.png" width=640 alt="Example screenshot" />
+<img src="examples/infracost-comment/screenshot.png" width=640 alt="Example screenshot" />
 
 ## Usage
 
@@ -44,7 +44,7 @@ To use this method, add the following `pre_workflow_hook` to your chosen option 
 
 ### 2. Setup Infracost
 
-Once you've decided, **<a href="examples/combined-infracost-comment/README.md">follow this guide</a>** to setup Infracost with Atlantis.
+Once you've decided, **<a href="examples/infracost-comment/README.md">follow this guide</a>** to setup Infracost with Atlantis.
 
 ### 3. Test the integration
 
