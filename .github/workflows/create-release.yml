@@ -62,4 +62,5 @@ jobs:
           build-args: |
             version=v${{ matrix.atlantis_version }}
             cli_version=v${{ matrix.cli_release }}
+          platforms: linux/amd64,linux/arm64
           push: true
