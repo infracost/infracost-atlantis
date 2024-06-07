@@ -46,9 +46,9 @@ jobs:
         with:
           images: infracost/infracost-atlantis
           flavor: |
-            latest=${{ matrix.latest }}
+            latest=false
           tags: |
-            type=raw,value=atlantis${{ matrix.atlantis_release }}-infracost${{ matrix.cli_release }}
+            type=raw,value=test-atlantis${{ matrix.atlantis_release }}-infracost${{ matrix.cli_release }}
           labels: |
             atlantis-version=${{ matrix.atlantis_version }}
             cli-version=${{ matrix.cli_version }}
