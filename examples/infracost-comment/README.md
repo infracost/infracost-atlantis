@@ -62,9 +62,9 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
           - show # this writes the plan JSON to $SHOWFILE
           # Run Infracost breakdown and save to a tempfile, namespaced by this project, PR, workspace and dir
           - run: |
-              INFRACOST_VCS_PULL_REQUEST_TITLE=\"$(curl -s \
+              export INFRACOST_VCS_PULL_REQUEST_TITLE=\"$(curl -s \
                   -H "Accept: application/vnd.github+json" \
-                  -H "Authorization: $GITHUB_TOKEN" \
+                  -H "Authorization: Bearer $GITHUB_TOKEN" \
                   "https://api.github.com/repos/$BASE_REPO_OWNER/$BASE_REPO_NAME/pulls/$PULL_NUM" | jq -r '.title')\"
               infracost breakdown --path=$SHOWFILE \
                                   --format=json \
