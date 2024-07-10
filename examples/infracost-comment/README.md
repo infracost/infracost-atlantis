@@ -33,22 +33,23 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       workflow: terraform-infracost
       pre_workflow_hooks:
         # Clean up any files left over from previous runs
-        - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
-          commands: plan
-        - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+        - run: |
+          INFRACOST_DIR=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+          rm -rf $INFRACOST_DIR && \
+          mkdir -p $INFRACOST_DIR
           commands: plan
       post_workflow_hooks:
         - run: |
-            # Choose the commenting behavior, 'new' is a good default:
-            # new: Create a new cost estimate comment on every run of Atlantis for each project.
-            # update: Create a single comment and update it. The "quietest" option.
-            # hide-and-new: Minimize previous comments and create a new one.
-            # delete-and-new: Delete previous comments and create a new one.
-            infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+            INFRACOST_DIR=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM  
+            if [ "$(ls -A $INFRACOST_DIR)" ]; then
+              infracost comment github --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
                                      --pull-request $PULL_NUM \
-                                     --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
+                                     --path $INFRACOST_DIR/'*'-infracost.json \
                                      --github-token $GITHUB_TOKEN \
                                      --behavior new
+            else
+              echo "Infracost comment not posted because $INFRACOST_DIR is empty."
+            fi
           commands: plan
   workflows:
     terraform-infracost:
@@ -98,21 +99,23 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       workflow: terraform-infracost
       pre_workflow_hooks:
         # Clean up any files left over from previous runs
-        - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
-          command: plan
-        - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+        - run: |
+            INFRACOST_DIR=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+            rm -rf $INFRACOST_DIR && \
+            mkdir -p $INFRACOST_DIR
           command: plan
       post_workflow_hooks:
         - run: |
-            # Choose the commenting behavior, 'new' is a good default:
-            # new: Create a new cost estimate comment on every run of Atlantis for each project.
-            # update: Create a single comment and update it. The "quietest" option.
-            # delete-and-new: Delete previous comments and create a new one.
-            infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
-                                     --merge-request $PULL_NUM \
-                                     --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
-                                     --gitlab-token $GITLAB_TOKEN \
-                                     --behavior new
+            INFRACOST_DIR=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+            if [ "$(ls -A $INFRACOST_DIR)" ]; then
+              infracost comment gitlab --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+                                          --merge-request $PULL_NUM \
+                                          --path $INFRACOST_DIR/'*'-infracost.json \
+                                          --gitlab-token $GITLAB_TOKEN \
+                                          --behavior new
+            else
+              echo "Infracost comment not posted because $INFRACOST_DIR is empty."
+            fi
           command: plan
   workflows:
     terraform-infracost:
@@ -152,22 +155,24 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       workflow: terraform-infracost
       pre_workflow_hooks:
         # Clean up any files left over from previous runs
-        - run: rm -rf /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM
-          command: plan
-        - run: mkdir -p /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM
+        - run: | 
+            INFRACOST_DIR=/tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM
+            rm -rf $INFRACOST_DIR && \
+            mkdir -p $INFRACOST_DIR
           command: plan
       post_workflow_hooks:
         - run: |
-            # Choose the commenting behavior, 'new' is a good default:
-            # new: Create a new cost estimate comment on every run of Atlantis for each project.
-            # update: Create a single comment and update it. The "quietest" option.
-            # delete-and-new: Delete previous comments and create a new one.
-            infracost comment azure-repos --repo-url $AZURE_REPO_URL \
+            INFRACOST_DIR=/tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM
+            if [ "$(ls -A $INFRACOST_DIR)" ]; then
+              infracost comment azure-repos --repo-url $AZURE_REPO_URL \
                                           --pull-request $PULL_NUM \
-                                          --path /tmp/${BASE_REPO_OWNER//\//-}-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
+                                          --path $INFRACOST_DIR/'*'-infracost.json \
                                           --azure-access-token $AZURE_ACCESS_TOKEN \
                                           --tag $INFRACOST_COMMENT_TAG \
                                           --behavior new
+            else
+              echo "Infracost comment not posted because $INFRACOST_DIR is empty."
+            fi
           command: plan
   workflows:
     terraform-infracost:
@@ -206,22 +211,23 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       workflow: terraform-infracost
       pre_workflow_hooks:
         # Clean up any files left over from previous runs
-        - run: rm -rf /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
-          commands: plan
-        - run: mkdir -p /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+        - run: |
+            INFRACOST_DIR=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+            rm -rf $INFRACOST_DIR && \
+            mkdir -p $INFRACOST_DIR
           commands: plan
       post_workflow_hooks:
         - run: |
-            # Choose the commenting behavior, 'new' is a good default:
-            # new: Create a new cost estimate comment on every run of Atlantis for each project.
-            # update: Create a single comment and update it. The "quietest" option.
-            # hide-and-new: Minimize previous comments and create a new one.
-            # delete-and-new: Delete previous comments and create a new one.
-            infracost comment bitbucket --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
+            INFRACOST_DIR=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+            if [ "$(ls -A $INFRACOST_DIR)" ]; then
+              infracost comment bitbucket --repo $BASE_REPO_OWNER/$BASE_REPO_NAME \
                                         --pull-request $PULL_NUM \
-                                        --path /tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM/'*'-infracost.json \
+                                        --path $INFRACOST_DIR/'*'-infracost.json \
                                         --bitbucket-token $BITBUCKET_TOKEN \
                                         --behavior new
+            else
+              echo "Infracost comment not posted because $INFRACOST_DIR is empty."
+            fi
           commands: plan
   workflows:
     terraform-infracost:
