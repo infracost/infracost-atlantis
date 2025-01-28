@@ -1,7 +1,7 @@
 # Infracost Atlantis Integration
 
-### Try the GitHub or GitLab App
-👉👉 If you use Atlantis with GitHub/GitLab, we recommend using the free Infracost [**GitHub App**](https://www.infracost.io/docs/integrations/github_app/) or [**GitLab App**](https://www.infracost.io/docs/integrations/gitlab_app/) as they're much simpler to setup and faster to run
+### Try the GitHub, GitLab App or Azure Repos App
+👉👉 If you use Atlantis with GitHub/GitLab/Azure Repos, we recommend using the free Infracost [**GitHub App**](https://www.infracost.io/docs/integrations/github_app/), [**GitLab App**](https://www.infracost.io/docs/integrations/gitlab_app/) or [**Azure Repos App**](https://www.infracost.io/docs/integrations/azure_repos_app/) as they're much simpler to setup and faster to run
 
 ---
 
