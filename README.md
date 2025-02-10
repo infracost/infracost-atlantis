@@ -1,7 +1,7 @@
 # Infracost Atlantis Integration
 
-### Try the GitHub or GitLab App
-👉👉 If you use Atlantis with GitHub/GitLab, we recommend using the free Infracost [**GitHub App**](https://www.infracost.io/docs/integrations/github_app/) or [**GitLab App**](https://www.infracost.io/docs/integrations/gitlab_app/) as they're much simpler to setup and faster to run
+### Try the GitHub, GitLab or Azure Repos App
+👉👉 If you use Atlantis with GitHub/GitLab/Azure Repos, we recommend using the free Infracost [**GitHub App**](https://www.infracost.io/docs/integrations/github_app/), [**GitLab App**](https://www.infracost.io/docs/integrations/gitlab_app/) or [**Azure Repos App**](https://www.infracost.io/docs/integrations/azure_repos_app/) as they're much simpler to setup and faster to run
 
 ---
 
@@ -17,8 +17,8 @@ Since Atlantis does not have a plugins concept, you need to decide which deploym
 
 #### a. Use our Docker images (recommended)
 Use our [`infracost-atlantis`](https://hub.docker.com/r/infracost/infracost-atlantis) Docker images that [extend](https://www.runatlantis.io/docs/deployment.html#customization) the Atlantis image to add Infracost. We maintain tags for the latest two 0.x versions of Atlantis:
-  - `infracost/infracost-atlantis:atlantis0.31-infracost0.10` latest patch version of Atlantis v0.31 and Infracost v0.10
-  - `infracost/infracost-atlantis:atlantis0.30-infracost0.10` latest patch version of Atlantis v0.30 and Infracost v0.10
+  - `infracost/infracost-atlantis:atlantis0.33-infracost0.10` latest patch version of Atlantis v0.33 and Infracost v0.10
+  - `infracost/infracost-atlantis:atlantis0.32-infracost0.10` latest patch version of Atlantis v0.32 and Infracost v0.10
   - `infracost/infracost-atlantis:latest` latest versions of Atlantis and Infracost
 
 #### b. Build your own Docker image
