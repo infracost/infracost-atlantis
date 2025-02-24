@@ -34,9 +34,9 @@ This Atlantis repo.yaml file shows how Infracost can be used with Atlantis. Even
       pre_workflow_hooks:
         # Clean up any files left over from previous runs
         - run: |
-          INFRACOST_DIR=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
-          rm -rf $INFRACOST_DIR && \
-          mkdir -p $INFRACOST_DIR
+            INFRACOST_DIR=/tmp/$BASE_REPO_OWNER-$BASE_REPO_NAME-$PULL_NUM
+            rm -rf $INFRACOST_DIR && \
+            mkdir -p $INFRACOST_DIR
           commands: plan
       post_workflow_hooks:
         - run: |
