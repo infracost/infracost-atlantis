@@ -17,7 +17,7 @@ Since Atlantis does not have a plugins concept, you need to decide which deploym
 
 #### a. Use our Docker images (recommended)
 Use our [`infracost-atlantis`](https://hub.docker.com/r/infracost/infracost-atlantis) Docker images that [extend](https://www.runatlantis.io/docs/deployment.html#customization) the Atlantis image to add Infracost. We maintain tags for the latest two 0.x versions of Atlantis:
-  - `infracost/infracost-atlantis:atlantis0.38-infracost0.10` latest patch version of Atlantis v0.38 and Infracost v0.10
+  - `infracost/infracost-atlantis:atlantis0.40-infracost0.10` latest patch version of Atlantis v0.40 and Infracost v0.10
   - `infracost/infracost-atlantis:atlantis0.39-infracost0.10` latest patch version of Atlantis v0.39 and Infracost v0.10
   - `infracost/infracost-atlantis:latest` latest versions of Atlantis and Infracost
 
