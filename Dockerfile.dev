@@ -5,7 +5,6 @@ FROM ghcr.io/runatlantis/atlantis:v0.20.1
 ADD infracost /usr/local/bin/infracost
 
 # Install required packages
-RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq nodejs npm && \
-    npm install -g @infracost/compost
+RUN apk --update --no-cache add ca-certificates openssl openssh-client curl git jq
 
 WORKDIR /atlantis/src
