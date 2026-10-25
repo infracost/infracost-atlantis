@@ -17,9 +17,28 @@ Since Atlantis does not have a plugins concept, you need to decide which deploym
 
 #### a. Use our Docker images (recommended)
 Use our [`infracost-atlantis`](https://hub.docker.com/r/infracost/infracost-atlantis) Docker images that [extend](https://www.runatlantis.io/docs/deployment.html#customization) the Atlantis image to add Infracost. We maintain tags for the latest two 0.x versions of Atlantis:
+  - `infracost/infracost-atlantis:atlantis0.49-infracost0.10` latest patch version of Atlantis v0.49 and Infracost v0.10
   - `infracost/infracost-atlantis:atlantis0.48-infracost0.10` latest patch version of Atlantis v0.48 and Infracost v0.10
-  - `infracost/infracost-atlantis:atlantis0.47-infracost0.10` latest patch version of Atlantis v0.47 and Infracost v0.10
   - `infracost/infracost-atlantis:latest` latest versions of Atlantis and Infracost
+
+> [!IMPORTANT]
+> From Atlantis v0.49, the image ships no `terraform` or `tofu` binary and Atlantis won't start until you set a default version. Atlantis then downloads that version at startup:
+>
+> ```bash
+> ATLANTIS_DEFAULT_TF_VERSION=<version>         # e.g. 1.9.8
+> ATLANTIS_DEFAULT_TF_DISTRIBUTION=opentofu     # only for OpenTofu
+> ```
+>
+> If your server can't download binaries, add one to the image yourself and turn off downloads:
+>
+> ```dockerfile
+> FROM infracost/infracost-atlantis:latest
+>
+> COPY terraform /usr/local/bin/terraform
+> ENV ATLANTIS_TF_DOWNLOAD=false
+> ```
+>
+> See the [Atlantis v0.49.0 release notes](https://github.com/runatlantis/atlantis/releases/tag/v0.49.0) for this and the other breaking changes.
 
 #### b. Build your own Docker image
 If you already use a custom Docker image for Atlantis, copy the top `RUN` command from [this Dockerfile](https://github.com/infracost/infracost-atlantis/blob/master/Dockerfile) into your Dockerfile.
